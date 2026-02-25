@@ -1,0 +1,286 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --accent-color: #000000;
+    --secondary-color: #f0f4f8;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Outfit', -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 覆盖层通用样式 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.05);
+}
+
+.glass-panel {
+    text-align: center;
+    padding: 3rem;
+    max-width: 600px;
+    width: 90%;
+}
+
+.glitch-text {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 0.5rem;
+    animation: fadeInDown 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 关卡网格 */
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 3rem 0;
+}
+
+.level-btn {
+    background: white;
+    border: 1px solid #eee;
+    padding: 2rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.level-btn:hover {
+    border-color: #000;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.level-btn .dim {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.level-btn .desc {
+    font-size: 0.8rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* 游戏 UI 顶部 */
+#game-ui {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease;
+}
+
+#game-ui header {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.small-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.stats {
+    text-align: right;
+}
+
+.stats .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.4;
+    display: block;
+}
+
+.stats .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* 画布区域 */
+#game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding-bottom: 3rem;
+}
+
+.canvas-wrapper {
+    background: white;
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.03);
+    border-radius: 4px;
+}
+
+canvas {
+    image-rendering: pixelated;
+    cursor: grab;
+}
+
+canvas:active {
+    cursor: grabbing;
+}
+
+/* 按钮样式 */
+.premium-btn {
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-btn:hover {
+    transform: scale(1.05);
+    background: #333;
+}
+
+.premium-btn.large {
+    padding: 1.2rem 4rem;
+    font-size: 1.2rem;
+}
+
+.premium-btn.secondary {
+    background: #f5f5f7;
+    color: #000;
+}
+
+.icon-btn {
+    background: none;
+    border: 1px solid #eee;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.text-link {
+    background: none;
+    border: none;
+    margin-top: 2rem;
+    opacity: 0.5;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+}
+
+.text-link:hover {
+    opacity: 1;
+}
+
+/* 获胜界面内容 */
+.win-content {
+    text-align: center;
+}
+
+.win-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.win-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

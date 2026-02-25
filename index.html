@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Slice | 像素不规则拼图</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Zpix&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 开始界面 -->
+        <div id="start-screen" class="overlay">
+            <div class="glass-panel">
+                <h1 class="glitch-text">PIXEL SLICE</h1>
+                <p>黑白极简 | 几何解构</p>
+                <button id="playBtn" class="premium-btn large">开始游戏</button>
+            </div>
+        </div>
+
+        <!-- 关卡/难度选择 -->
+        <div id="level-screen" class="overlay hidden">
+            <div class="glass-panel">
+                <h2>选择难度</h2>
+                <div class="level-grid">
+                    <button class="level-btn" data-region="asia" data-level="0">
+                        <span class="dim">🍙</span>
+                        <span class="desc">亚洲 · 饭团</span>
+                    </button>
+                    <button class="level-btn" data-region="asia" data-level="1">
+                        <span class="dim">🍣</span>
+                        <span class="desc">亚洲 · 寿司</span>
+                    </button>
+                    <button class="level-btn" data-region="europe" data-level="0">
+                        <span class="dim">🍕</span>
+                        <span class="desc">欧洲 · 披萨</span>
+                    </button>
+                    <button class="level-btn" data-region="americas" data-level="0">
+                        <span class="dim">🍔</span>
+                        <span class="desc">美洲 · 汉堡</span>
+                    </button>
+                </div>
+                <button id="backToMenu" class="text-link">返回首页</button>
+            </div>
+        </div>
+
+        <!-- 游戏界面 -->
+        <div id="game-ui" class="hidden">
+            <header>
+                <div class="header-left">
+                    <button id="homeBtn" class="icon-btn">←</button>
+                    <h1 class="small-title">PIXEL SLICE</h1>
+                </div>
+                <div class="stats">
+                    <span class="label">完成度</span>
+                    <span id="progress" class="value">0%</span>
+                </div>
+            </header>
+
+            <main id="game-container">
+                <div class="canvas-wrapper">
+                    <canvas id="gameCanvas"></canvas>
+                </div>
+
+                <div class="bottom-controls">
+                    <button id="resetBtn" class="premium-btn">上传图片</button>
+                    <button id="hintBtn" class="premium-btn secondary">重新打乱</button>
+                </div>
+            </main>
+        </div>
+
+        <!-- 获胜弹窗 -->
+        <div id="win-overlay" class="overlay hidden">
+            <div class="win-content">
+                <div class="win-icon">✔</div>
+                <h2>解构完成</h2>
+                <p>光影归位，逻辑自洽</p>
+                <div class="win-actions">
+                    <button id="toLevelBtn" class="premium-btn">返回关卡</button>
+                    <button id="nextBtn" class="premium-btn secondary">重新开始</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+
+</html>
