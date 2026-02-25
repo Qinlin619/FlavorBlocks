@@ -20,13 +20,40 @@ let currentLevelIdx = 0;
 let pieces = [];
 let draggingPiece = null;
 let offset = { x: 0, y: 0 };
+let currentLang = 'en'; // 'en' or 'zh'
 
-// 美食关卡数据库
+const I18N = {
+    en: {
+        title: "PPuzzle",
+        play: "PLAY",
+        selectRegion: "SELECT REGION",
+        progress: "PROGRESS",
+        winTitle: "COMPLETED",
+        winDesc: "Everything in its right place.",
+        map: "MAP",
+        next: "NEXT",
+        congrats: "Congratulations! You've completed all global delicacies!",
+        back: "BACK"
+    },
+    zh: {
+        title: "像素拼拼",
+        play: "开始游戏",
+        selectRegion: "选择区域",
+        progress: "完成度",
+        winTitle: "解构完成",
+        winDesc: "光影归位，逻辑自洽",
+        map: "地图",
+        next: "下一关",
+        congrats: "恭喜！你已拼完所有的全球美食！",
+        back: "返回"
+    }
+};
+
 // 美食关卡数据库
 const FOOD_LEVELS = {
     "asia": [
         {
-            name: "饭团 (Onigiri)",
+            name: { en: "Onigiri", zh: "饭团" },
             dim: 5,
             mask: [
                 [0, 0, 1, 0, 0],
@@ -35,11 +62,11 @@ const FOOD_LEVELS = {
                 [1, 1, 1, 1, 1],
                 [0, 0, 1, 0, 0]
             ],
-            colors: { 1: "#000000" }, // 简约黑
-            story: "故事从一粒米开始。在东方的精致中，寻找形状的平衡。"
+            colors: { 1: "#000000" },
+            story: { en: "A grain of rice. Finding balance in Eastern delicacy.", zh: "故事从一粒米开始。在东方的精致中，寻找形状的平衡。" }
         },
         {
-            name: "三文鱼握寿司 (Sushi)",
+            name: { en: "Sushi", zh: "三文鱼握寿司" },
             dim: 6,
             mask: [
                 [0, 2, 2, 2, 2, 0],
@@ -48,11 +75,11 @@ const FOOD_LEVELS = {
                 [1, 1, 1, 1, 1, 1],
                 [1, 1, 1, 1, 1, 1]
             ],
-            colors: { 1: "#ffffff", 2: "#ff4757" }, // 白饭+鱼片
-            story: "极简的切割，是对食材最高的敬意。"
+            colors: { 1: "#ffffff", 2: "#ff4757" },
+            story: { en: "Minimalistic cutting, the highest respect for ingredients.", zh: "极简的切割，是对食材最高的敬意。" }
         },
         {
-            name: "中国饺子 (Dumpling)",
+            name: { en: "Dumpling", zh: "中国饺子" },
             dim: 7,
             mask: [
                 [0, 0, 1, 1, 1, 0, 0],
@@ -63,10 +90,10 @@ const FOOD_LEVELS = {
                 [0, 0, 2, 2, 2, 0, 0]
             ],
             colors: { 1: "#fdfdfd", 2: "#e0e0e0" },
-            story: "包裹着团圆的温度，每一个褶皱都是岁月的痕迹。"
+            story: { en: "Wrapped with the warmth of reunion, every fold is a trace of time.", zh: "包裹着团圆的温度，每一个褶皱都是岁月的痕迹。" }
         },
         {
-            name: "日本拉面 (Ramen)",
+            name: { en: "Ramen", zh: "日本拉面" },
             dim: 10,
             mask: [
                 [0, 0, 0, 4, 4, 0, 0, 0, 0, 0],
@@ -80,12 +107,12 @@ const FOOD_LEVELS = {
                 [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
             ],
             colors: { 1: "#e74c3c", 2: "#ffffff", 3: "#f1c40f", 4: "#34495e", 5: "#ffffff" },
-            story: "浓郁的汤底中，像素化的线条勾勒出深夜的慰藉。"
+            story: { en: "Midnight comfort in a rich broth, pixelated lines sketch the noodle soup.", zh: "浓郁的汤底中，像素化的线条勾勒出深夜的慰藉。" }
         }
     ],
     "europe": [
         {
-            name: "意式披萨 (Pizza)",
+            name: { en: "Pizza", zh: "意式披萨" },
             dim: 8,
             mask: [
                 [0, 0, 1, 1, 1, 1, 0, 0],
@@ -96,11 +123,11 @@ const FOOD_LEVELS = {
                 [0, 1, 2, 3, 2, 2, 1, 0],
                 [0, 0, 1, 1, 1, 1, 0, 0]
             ],
-            colors: { 1: "#d35400", 2: "#f1c40f", 3: "#e74c3c" }, // 饼底+芝士+萨拉米
-            story: "漫步在托斯卡纳的午后，色彩与温度交织在一张圆饼里。"
+            colors: { 1: "#d35400", 2: "#f1c40f", 3: "#e74c3c" },
+            story: { en: "Colors and temperature interweave on a round crust.", zh: "漫步在托斯卡纳的午后，色彩与温度交织在一张圆饼里。" }
         },
         {
-            name: "牛角包 (Croissant)",
+            name: { en: "Croissant", zh: "牛角包" },
             dim: 8,
             mask: [
                 [0, 0, 0, 1, 1, 0, 0, 0],
@@ -112,27 +139,27 @@ const FOOD_LEVELS = {
                 [0, 0, 0, 1, 1, 0, 0, 0]
             ],
             colors: { 1: "#e67e22" },
-            story: "巴黎清晨的酥脆，在层层叠叠的黄油香气中苏醒。"
+            story: { en: "The crisp morning of Paris, waking up in layered buttery scent.", zh: "巴黎清晨的酥脆，在层层叠叠的黄油香气中苏醒。" }
         }
     ],
     "americas": [
         {
-            name: "芝士汉堡 (Burger)",
+            name: { en: "Burger", zh: "芝士汉堡" },
             dim: 8,
             mask: [
                 [0, 1, 1, 1, 1, 1, 1, 0],
                 [1, 1, 1, 1, 1, 1, 1, 1],
-                [6, 6, 6, 6, 6, 6, 6, 6], // 芝士
-                [3, 3, 3, 3, 3, 3, 3, 3], // 肉饼
-                [4, 4, 4, 4, 4, 4, 4, 4], // 菜
+                [6, 6, 6, 6, 6, 6, 6, 6],
+                [3, 3, 3, 3, 3, 3, 3, 3],
+                [4, 4, 4, 4, 4, 4, 4, 4],
                 [1, 1, 1, 1, 1, 1, 1, 1],
                 [0, 1, 1, 1, 1, 1, 1, 0]
             ],
             colors: { 1: "#e67e22", 6: "#f1c40f", 3: "#5d4037", 4: "#2ecc71" },
-            story: "这是自由港口的繁忙，也是层层叠加的秩序。"
+            story: { en: "Busy free harbor, also an order of layers stacked.", zh: "这是自由港口的繁忙，也是层层叠加的秩序。" }
         },
         {
-            name: "墨西哥卷饼 (Taco)",
+            name: { en: "Taco", zh: "墨西哥卷饼" },
             dim: 8,
             mask: [
                 [0, 0, 1, 1, 1, 1, 0, 0],
@@ -142,7 +169,58 @@ const FOOD_LEVELS = {
                 [1, 1, 1, 1, 1, 1, 1, 1]
             ],
             colors: { 1: "#f1c40f", 2: "#e74c3c", 3: "#2ecc71", 4: "#d35400" },
-            story: "所有的热情都被包裹在色彩鲜艳的饼皮之中。"
+            story: { en: "All the passion wrapped in colorful flatbread.", zh: "所有的热情都被包裹在色彩鲜艳的饼皮之中。" }
+        },
+        {
+            name: { en: "Donut", zh: "甜甜圈" },
+            dim: 8,
+            mask: [
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 2, 2, 1, 1, 1],
+                [1, 1, 2, 0, 0, 2, 1, 1],
+                [1, 1, 2, 0, 0, 2, 1, 1],
+                [1, 1, 1, 2, 2, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0]
+            ],
+            colors: { 1: "#ff9ff3", 2: "#feca57" },
+            story: { en: "A sweet ring of happiness, glazed with pink dreams.", zh: "一颗圆润的快乐，淋上粉红色的梦幻果酱。" }
+        }
+    ],
+    "others": [
+        {
+            name: { en: "Fish & Chips", zh: "炸鱼薯条" },
+            dim: 9,
+            mask: [
+                [0, 0, 0, 0, 0, 1, 1, 1, 1],
+                [0, 0, 0, 0, 1, 1, 1, 1, 1],
+                [2, 2, 2, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 0, 0, 1, 1, 1, 0],
+                [3, 3, 3, 3, 3, 3, 3, 3, 3],
+                [0, 3, 3, 3, 3, 3, 3, 3, 0]
+            ],
+            colors: { 1: "#e67e22", 2: "#f1c40f", 3: "#ecf0f1" },
+            story: { en: "Classic island comfort, wrapped in newspaper and tradition.", zh: "经典的海岛慰藉，包裹在旧报纸与传统之中。" }
+        },
+        {
+            name: { en: "Hot Pot", zh: "重庆火锅" },
+            dim: 10,
+            mask: [
+                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
+                [0, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+                [2, 1, 3, 1, 1, 1, 3, 1, 1, 2],
+                [2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+                [2, 1, 1, 3, 1, 3, 1, 1, 1, 2],
+                [0, 2, 1, 1, 1, 1, 1, 1, 2, 0],
+                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
+                [0, 0, 0, 4, 0, 0, 4, 0, 0, 0],
+                [0, 0, 4, 4, 4, 4, 4, 4, 0, 0]
+            ],
+            colors: { 1: "#c0392b", 2: "#bdc3c7", 3: "#f1c40f", 4: "#2c3e50" },
+            story: { en: "Bubbling red oil, spicy passion from the mist of Chongqing.", zh: "翻滚的红油，是山城迷雾中沸腾的热情。" }
         }
     ]
 };
@@ -276,7 +354,15 @@ function initGameFromData(data, region, idx) {
             pieces.push(new Piece(piecePixels, targetX, targetY, parseInt(colorId)));
         }
     }
-    document.querySelector('.small-title').innerText = data.name;
+    document.querySelector('.small-title').innerText = data.name[currentLang];
+    const storyEl = document.getElementById('story-text');
+    if (storyEl) {
+        storyEl.innerText = data.story[currentLang];
+        // 重新触发动画
+        storyEl.style.animation = 'none';
+        storyEl.offsetHeight;
+        storyEl.style.animation = null;
+    }
     render();
 }
 
@@ -330,6 +416,22 @@ document.getElementById('playBtn').addEventListener('click', () => {
     levelScreen.classList.remove('hidden');
 });
 
+// 绑定语言切换按钮
+const langBtn = document.getElementById('langBtn');
+if (langBtn) {
+    langBtn.addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'zh' : 'en';
+        applyLanguage();
+        if (currentLevelData) {
+            document.querySelector('.small-title').innerText = currentLevelData.name[currentLang];
+            const storyEl = document.getElementById('story-text');
+            if (storyEl) storyEl.innerText = currentLevelData.story[currentLang];
+        }
+    });
+}
+
+applyLanguage(); // 初始化执行一次
+
 document.querySelectorAll('.level-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const region = btn.dataset.region;
@@ -373,7 +475,7 @@ document.getElementById('nextBtn').addEventListener('click', () => {
             nextIdx = 0;
         } else {
             // 全通关了
-            alert("恭喜！你已拼完所有的全球美食！");
+            alert(I18N[currentLang].congrats);
             winOverlay.classList.add('hidden');
             gameUI.classList.add('hidden');
             startScreen.classList.remove('hidden');

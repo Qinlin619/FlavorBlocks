@@ -15,6 +15,11 @@
 
 body {
     background-color: var(--bg-color);
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    /* 极简背景网格 */
     color: var(--text-color);
     font-family: 'Outfit', -apple-system, sans-serif;
     display: flex;
@@ -51,6 +56,19 @@ body {
     opacity: 0;
     pointer-events: none;
     transform: scale(1.05);
+}
+
+/* 语言切换位置 */
+.lang-switch {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1001;
+}
+
+.premium-btn.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
 }
 
 .glass-panel {
@@ -158,8 +176,22 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    padding-bottom: 3rem;
+    gap: 1.5rem;
+    padding: 0 2rem 3rem 2rem;
+}
+
+.story-wrapper {
+    max-width: 500px;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.story-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.6;
+    font-style: italic;
+    animation: fadeInUp 1s ease;
 }
 
 .canvas-wrapper {
@@ -261,6 +293,18 @@ canvas:active {
 
 .hidden {
     display: none !important;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeInDown {

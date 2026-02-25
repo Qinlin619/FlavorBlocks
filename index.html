@@ -16,17 +16,19 @@
     <div id="app">
         <!-- 开始界面 -->
         <div id="start-screen" class="overlay">
+            <div class="lang-switch">
+                <button id="langBtn" class="premium-btn secondary small">EN / 中</button>
+            </div>
             <div class="glass-panel">
-                <h1 class="glitch-text">PIXEL SLICE</h1>
-                <p>黑白极简 | 几何解构</p>
-                <button id="playBtn" class="premium-btn large">开始游戏</button>
+                <h1 id="main-title" class="glitch-text">PPuzzle</h1>
+                <button id="playBtn" class="premium-btn large">PLAY</button>
             </div>
         </div>
 
         <!-- 关卡/难度选择 -->
         <div id="level-screen" class="overlay hidden">
             <div class="glass-panel">
-                <h2>选择难度</h2>
+                <h2 id="level-select-title">SELECT REGION</h2>
                 <div class="level-grid">
                     <button class="level-btn" data-region="asia" data-level="0">
                         <span class="dim">🍙</span>
@@ -58,7 +60,19 @@
                     </button>
                     <button class="level-btn" data-region="americas" data-level="1">
                         <span class="dim">🌮</span>
-                        <span class="desc">美洲 · 卷饼</span>
+                        <span class="desc">AMERICAS · Taco</span>
+                    </button>
+                    <button class="level-btn" data-region="americas" data-level="2">
+                        <span class="dim">🍩</span>
+                        <span class="desc">AMERICAS · Donut</span>
+                    </button>
+                    <button class="level-btn" data-region="others" data-level="0">
+                        <span class="dim">🇬🇧</span>
+                        <span class="desc">OTHERS · Fish & Chips</span>
+                    </button>
+                    <button class="level-btn" data-region="others" data-level="1">
+                        <span class="dim">🔥</span>
+                        <span class="desc">OTHERS · Hot Pot</span>
                     </button>
                 </div>
                 <button id="backToMenu" class="text-link">返回首页</button>
@@ -70,15 +84,18 @@
             <header>
                 <div class="header-left">
                     <button id="homeBtn" class="icon-btn">←</button>
-                    <h1 class="small-title">PIXEL SLICE</h1>
+                    <h1 id="game-ui-title" class="small-title">PPuzzle</h1>
                 </div>
                 <div class="stats">
-                    <span class="label">完成度</span>
+                    <span id="label-progress" class="label">PROGRESS</span>
                     <span id="progress" class="value">0%</span>
                 </div>
             </header>
 
             <main id="game-container">
+                <div class="story-wrapper">
+                    <p id="story-text" class="story-text"></p>
+                </div>
                 <div class="canvas-wrapper">
                     <canvas id="gameCanvas"></canvas>
                 </div>
@@ -94,11 +111,11 @@
         <div id="win-overlay" class="overlay hidden">
             <div class="win-content">
                 <div class="win-icon">✔</div>
-                <h2>解构完成</h2>
-                <p>光影归位，逻辑自洽</p>
+                <h2 id="win-title">COMPLETED</h2>
+                <p id="win-desc">Everything in its right place.</p>
                 <div class="win-actions">
-                    <button id="toLevelBtn" class="premium-btn">返回关卡</button>
-                    <button id="nextBtn" class="premium-btn secondary">重新开始</button>
+                    <button id="toLevelBtn" class="premium-btn">MAP</button>
+                    <button id="nextBtn" class="premium-btn secondary">NEXT</button>
                 </div>
             </div>
         </div>
