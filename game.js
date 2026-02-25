@@ -15,6 +15,8 @@ const gameUI = document.getElementById('game-ui');
 // 核心状态
 let PIXEL_SIZE = 60;
 let currentLevelData = null;
+let currentRegion = "asia";
+let currentLevelIdx = 0;
 let pieces = [];
 let draggingPiece = null;
 let offset = { x: 0, y: 0 };
@@ -222,8 +224,10 @@ class Piece {
     }
 }
 
-function initGameFromData(data) {
+function initGameFromData(data, region, idx) {
     currentLevelData = data;
+    currentRegion = region;
+    currentLevelIdx = idx;
     const dim = data.dim;
     PIXEL_SIZE = Math.min(60, 450 / dim);
 
@@ -333,7 +337,7 @@ document.querySelectorAll('.level-btn').forEach(btn => {
         const levelData = FOOD_LEVELS[region][levelIdx];
         levelScreen.classList.add('hidden');
         gameUI.classList.remove('hidden');
-        initGameFromData(levelData);
+        initGameFromData(levelData, region, levelIdx);
     });
 });
 
@@ -355,7 +359,30 @@ document.getElementById('toLevelBtn').addEventListener('click', () => {
 
 document.getElementById('nextBtn').addEventListener('click', () => {
     winOverlay.classList.add('hidden');
-    initGameFromData(currentLevelData);
+
+    // 逻辑：寻找下一关
+    const regions = Object.keys(FOOD_LEVELS);
+    let nextIdx = currentLevelIdx + 1;
+    let nextRegion = currentRegion;
+
+    if (nextIdx >= FOOD_LEVELS[currentRegion].length) {
+        // 当前区玩完了，去下一个区
+        const currentRegionIdx = regions.indexOf(currentRegion);
+        if (currentRegionIdx < regions.length - 1) {
+            nextRegion = regions[currentRegionIdx + 1];
+            nextIdx = 0;
+        } else {
+            // 全通关了
+            alert("恭喜！你已拼完所有的全球美食！");
+            winOverlay.classList.add('hidden');
+            gameUI.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            return;
+        }
+    }
+
+    const nextLevelData = FOOD_LEVELS[nextRegion][nextIdx];
+    initGameFromData(nextLevelData, nextRegion, nextIdx);
 });
 
 document.getElementById('hintBtn').addEventListener('click', () => {
