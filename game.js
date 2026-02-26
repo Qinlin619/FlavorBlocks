@@ -947,6 +947,24 @@ canvas.addEventListener('mousedown', e => {
     }
 });
 
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    const mx = touch.clientX - rect.left;
+    const my = touch.clientY - rect.top;
+    for (let i = pieces.length - 1; i >= 0; i--) {
+        if (pieces[i].isPointInside(mx, my)) {
+            draggingPiece = pieces[i];
+            offset.x = mx - draggingPiece.x;
+            offset.y = my - draggingPiece.y;
+            pieces.splice(i, 1);
+            pieces.push(draggingPiece);
+            break;
+        }
+    }
+}, { passive: false });
+
 window.addEventListener('mousemove', e => {
     if (draggingPiece) {
         const rect = canvas.getBoundingClientRect();
@@ -975,7 +993,45 @@ window.addEventListener('mousemove', e => {
     }
 });
 
+window.addEventListener('touchmove', e => {
+    if (draggingPiece) {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        let nextX = touch.clientX - rect.left - offset.x;
+        let nextY = touch.clientY - rect.top - offset.y;
+
+        // 边界限制：计算 piece 的实际宽度和高度
+        const minPixelX = Math.min(...draggingPiece.pixels.map(p => p.x));
+        const maxPixelX = Math.max(...draggingPiece.pixels.map(p => p.x));
+        const minPixelY = Math.min(...draggingPiece.pixels.map(p => p.y));
+        const maxPixelY = Math.max(...draggingPiece.pixels.map(p => p.y));
+
+        const pieceLeft = nextX + minPixelX * PIXEL_SIZE;
+        const pieceRight = nextX + (maxPixelX + 1) * PIXEL_SIZE;
+        const pieceTop = nextY + minPixelY * PIXEL_SIZE;
+        const pieceBottom = nextY + (maxPixelY + 1) * PIXEL_SIZE;
+
+        if (pieceLeft < 0) nextX -= pieceLeft;
+        if (pieceRight > canvas.width) nextX -= (pieceRight - canvas.width);
+        if (pieceTop < 0) nextY -= pieceTop;
+        if (pieceBottom > canvas.height) nextY -= (pieceBottom - canvas.height);
+
+        draggingPiece.x = nextX;
+        draggingPiece.y = nextY;
+        render();
+    }
+}, { passive: false });
+
 window.addEventListener('mouseup', () => {
+    if (draggingPiece) {
+        draggingPiece.checkSnap();
+        draggingPiece = null;
+        render();
+    }
+});
+
+window.addEventListener('touchend', e => {
     if (draggingPiece) {
         draggingPiece.checkSnap();
         draggingPiece = null;
