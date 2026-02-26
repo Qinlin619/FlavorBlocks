@@ -14,68 +14,95 @@
 
 <body>
     <div id="app">
-        <!-- 开始界面 -->
+        <!-- 更加高级的开始界面 -->
         <div id="start-screen" class="overlay">
             <div class="lang-switch">
                 <button id="langBtn" class="premium-btn secondary small">EN / 中</button>
             </div>
-            <div class="glass-panel">
-                <h1 id="main-title" class="glitch-text">PPuzzle</h1>
-                <button id="playBtn" class="premium-btn large">PLAY</button>
+            <div class="hero-content">
+                <div class="hero-subtitle">FINE PIXEL DINING</div>
+                <h1 id="main-title" class="hero-title">像素餐厅</h1>
+                <div class="hero-line"></div>
+                <button id="playBtn" class="play-trigger">
+                    <span class="btn-text">OPEN MENU</span>
+                    <span class="btn-sub">开启赏味之旅</span>
+                </button>
+            </div>
+            <div class="hero-bg-accent"></div>
+        </div>
+
+        <!-- 关卡/难度选择 (左右滑动的卡片式菜单) -->
+        <div id="level-screen" class="overlay hidden">
+            <div class="menu-container">
+                <header class="menu-top-header">
+                    <h2 id="level-select-title">MENU</h2>
+                    <div class="menu-description">Select a regional flavor to start your dining experience.</div>
+                </header>
+
+                <div class="flavor-carousel">
+                    <!-- 亚洲风味卡片 -->
+                    <div class="flavor-card" data-region="asia">
+                        <div class="card-header">
+                            <span class="card-num">01</span>
+                            <h3>ASIA / 亚洲风味</h3>
+                        </div>
+                        <div class="card-footer">
+                            <span class="explore-text">EXPLORE DISHES</span>
+                        </div>
+                    </div>
+
+                    <!-- 欧陆风情卡片 -->
+                    <div class="flavor-card" data-region="europe">
+                        <div class="card-header">
+                            <span class="card-num">02</span>
+                            <h3>EUROPE / 欧陆风情</h3>
+                        </div>
+                        <div class="card-footer">
+                            <span class="explore-text">EXPLORE DISHES</span>
+                        </div>
+                    </div>
+
+                    <!-- 美洲经典卡片 -->
+                    <div class="flavor-card" data-region="americas">
+                        <div class="card-header">
+                            <span class="card-num">03</span>
+                            <h3>AMERICAS / 美洲经典</h3>
+                        </div>
+                        <div class="card-footer">
+                            <span class="explore-text">EXPLORE DISHES</span>
+                        </div>
+                    </div>
+
+                    <!-- 特调之选卡片 -->
+                    <div class="flavor-card" data-region="others">
+                        <div class="card-header">
+                            <span class="card-num">04</span>
+                            <h3>OTHERS / 特调之选</h3>
+                        </div>
+                        <div class="card-footer">
+                            <span class="explore-text">EXPLORE DISHES</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="backToMenu" class="menu-back-btn">RETURN TO FRONT</button>
             </div>
         </div>
 
-        <!-- 关卡/难度选择 -->
-        <div id="level-screen" class="overlay hidden">
-            <div class="glass-panel">
-                <h2 id="level-select-title">SELECT REGION</h2>
-                <div class="level-grid">
-                    <button class="level-btn" data-region="asia" data-level="0">
-                        <span class="dim">🍙</span>
-                        <span class="desc">亚洲 · 饭团</span>
-                    </button>
-                    <button class="level-btn" data-region="asia" data-level="1">
-                        <span class="dim">🍣</span>
-                        <span class="desc">亚洲 · 寿司</span>
-                    </button>
-                    <button class="level-btn" data-region="asia" data-level="2">
-                        <span class="dim">🥟</span>
-                        <span class="desc">亚洲 · 饺子</span>
-                    </button>
-                    <button class="level-btn" data-region="asia" data-level="3">
-                        <span class="dim">🍜</span>
-                        <span class="desc">亚洲 · 拉面</span>
-                    </button>
-                    <button class="level-btn" data-region="europe" data-level="0">
-                        <span class="dim">🍕</span>
-                        <span class="desc">欧洲 · 披萨</span>
-                    </button>
-                    <button class="level-btn" data-region="europe" data-level="1">
-                        <span class="dim">🥐</span>
-                        <span class="desc">欧洲 · 牛角包</span>
-                    </button>
-                    <button class="level-btn" data-region="americas" data-level="0">
-                        <span class="dim">🍔</span>
-                        <span class="desc">美洲 · 汉堡</span>
-                    </button>
-                    <button class="level-btn" data-region="americas" data-level="1">
-                        <span class="dim">🌮</span>
-                        <span class="desc">AMERICAS · Taco</span>
-                    </button>
-                    <button class="level-btn" data-region="americas" data-level="2">
-                        <span class="dim">🍩</span>
-                        <span class="desc">AMERICAS · Donut</span>
-                    </button>
-                    <button class="level-btn" data-region="others" data-level="0">
-                        <span class="dim">🇬🇧</span>
-                        <span class="desc">OTHERS · Fish & Chips</span>
-                    </button>
-                    <button class="level-btn" data-region="others" data-level="1">
-                        <span class="dim">🔥</span>
-                        <span class="desc">OTHERS · Hot Pot</span>
-                    </button>
+        <!-- 具体的菜品选择界面 (子界面) -->
+        <div id="dish-screen" class="overlay hidden">
+            <div class="menu-container dish-selection-container">
+                <header class="menu-top-header">
+                    <button id="backToCarousel" class="menu-back-btn" style="margin-top: 0; margin-bottom: 2rem;">← BACK
+                        TO MENU</button>
+                    <div class="header-titles">
+                        <span id="sub-menu-region" class="region-pill">REGION</span>
+                        <h2 id="sub-menu-title" style="font-size: 3.5rem;">SELECT DISH</h2>
+                    </div>
+                </header>
+                <div id="dish-list" class="dish-list-container">
+                    <!-- JS 动态填充 -->
                 </div>
-                <button id="backToMenu" class="text-link">返回首页</button>
             </div>
         </div>
 
@@ -101,7 +128,6 @@
                 </div>
 
                 <div class="bottom-controls">
-                    <button id="resetBtn" class="premium-btn">上传图片</button>
                     <button id="hintBtn" class="premium-btn secondary">重新打乱</button>
                 </div>
             </main>

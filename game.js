@@ -10,6 +10,8 @@ const winOverlay = document.getElementById('win-overlay');
 // UI 元素
 const startScreen = document.getElementById('start-screen');
 const levelScreen = document.getElementById('level-screen');
+const dishScreen = document.getElementById('dish-screen');
+const dishList = document.getElementById('dish-list');
 const gameUI = document.getElementById('game-ui');
 
 // 核心状态
@@ -20,31 +22,38 @@ let currentLevelIdx = 0;
 let pieces = [];
 let draggingPiece = null;
 let offset = { x: 0, y: 0 };
-let currentLang = 'en'; // 'en' or 'zh'
+let currentLang = 'zh'; // Default to zh as requested
+let completedLevels = JSON.parse(localStorage.getItem('pixel_restaurant_completed') || '{}');
 
 const I18N = {
     en: {
-        title: "PPuzzle",
-        play: "PLAY",
-        selectRegion: "SELECT REGION",
-        progress: "PROGRESS",
-        winTitle: "COMPLETED",
-        winDesc: "Everything in its right place.",
-        map: "MAP",
-        next: "NEXT",
-        congrats: "Congratulations! You've completed all global delicacies!",
-        back: "BACK"
+        title: "Pixel Restaurant",
+        play: "OPEN MENU",
+        selectRegion: "MENU",
+        selectDesc: "Enjoy varied delicacies",
+        subTitle: "SELECT DISH",
+        served: "SERVED",
+        progress: "PREPARATION",
+        winTitle: "DISH READY!",
+        winDesc: "Your order has been served perfectly.",
+        map: "MENU",
+        next: "NEXT DISH",
+        congrats: "Incredible! You've tasted every delicacy in our restaurant!",
+        back: "CLOSE"
     },
     zh: {
-        title: "像素拼拼",
-        play: "开始游戏",
-        selectRegion: "选择区域",
-        progress: "完成度",
-        winTitle: "解构完成",
-        winDesc: "光影归位，逻辑自洽",
-        map: "地图",
-        next: "下一关",
-        congrats: "恭喜！你已拼完所有的全球美食！",
+        title: "像素餐厅",
+        play: "开启菜单",
+        selectRegion: "菜单",
+        selectDesc: "享受多种美食",
+        subTitle: "请点餐",
+        served: "已上菜",
+        progress: "备菜进度",
+        winTitle: "菜已经准备好了！",
+        winDesc: "滋味归位，请慢用。",
+        map: "菜单",
+        next: "下一道菜",
+        congrats: "太棒了！你已经品鉴完了餐厅的所有美食！",
         back: "返回"
     }
 };
@@ -233,14 +242,26 @@ class Piece {
         this.colorId = colorId;
         this.color = currentLevelData.colors[colorId] || "#000000";
 
-        // 初始随机位置
-        const padding = 100;
-        this.x = Math.random() * (canvas.width - padding * 2) + padding;
-        this.y = Math.random() * (canvas.height - padding * 2) + padding;
+        // 初始随机位置：确保完全在画布内
+        const minPixelX = Math.min(...pixels.map(p => p.x));
+        const maxPixelX = Math.max(...pixels.map(p => p.x));
+        const minPixelY = Math.min(...pixels.map(p => p.y));
+        const maxPixelY = Math.max(...pixels.map(p => p.y));
 
-        if (Math.abs(this.x - this.targetX) < 100 && Math.abs(this.y - this.targetY) < 100) {
-            this.x += 200;
-        }
+        const pieceW = (maxPixelX - minPixelX + 1) * PIXEL_SIZE;
+        const pieceH = (maxPixelY - minPixelY + 1) * PIXEL_SIZE;
+
+        // 随机尝试放置直到不在目标位置正上方
+        let attempts = 0;
+        do {
+            this.x = Math.random() * (canvas.width - pieceW) - minPixelX * PIXEL_SIZE;
+            this.y = Math.random() * (canvas.height - pieceH) - minPixelY * PIXEL_SIZE;
+            attempts++;
+        } while (
+            attempts < 10 &&
+            Math.abs(this.x - this.targetX) < 100 &&
+            Math.abs(this.y - this.targetY) < 100
+        );
 
         this.isLocked = false;
     }
@@ -249,12 +270,14 @@ class Piece {
         ctx.fillStyle = this.color;
         ctx.globalAlpha = this.isLocked ? 1.0 : 0.9;
         this.pixels.forEach(p => {
-            ctx.fillRect(
-                this.x + p.x * PIXEL_SIZE,
-                this.y + p.y * PIXEL_SIZE,
-                PIXEL_SIZE - 1,
-                PIXEL_SIZE - 1
-            );
+            const rx = this.x + p.x * PIXEL_SIZE;
+            const ry = this.y + p.y * PIXEL_SIZE;
+            ctx.fillRect(rx, ry, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
+
+            // 为浅色块添加一个极淡的轮廓线，增强辨识度
+            ctx.strokeStyle = "rgba(0,0,0,0.05)";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(rx, ry, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
         });
         ctx.globalAlpha = 1.0;
 
@@ -269,7 +292,8 @@ class Piece {
     }
 
     drawTarget(ctx) {
-        ctx.fillStyle = "#f9f9f9";
+        // 目标槽位颜色：稍微深一点的灰色，并带上虚线边框感
+        ctx.fillStyle = "rgba(0,0,0,0.03)";
         this.pixels.forEach(p => {
             ctx.fillRect(
                 this.targetX + p.x * PIXEL_SIZE,
@@ -291,6 +315,37 @@ class Piece {
 
     checkSnap() {
         if (this.isLocked) return true;
+
+        // 特殊逻辑：单块碎片可以互换目标位置，如果它们颜色相同且都是 1x1
+        if (this.pixels.length === 1) {
+            const p = this.pixels[0];
+            for (let other of pieces) {
+                // 如果是其他未鎖定的同色单块
+                if (other !== this && !other.isLocked && other.pixels.length === 1 && other.colorId === this.colorId) {
+                    const op = other.pixels[0];
+                    // 检查此 piece 是否靠近 other piece 的目标位置
+                    const targetXForThis = this.targetX + (op.x - p.x) * PIXEL_SIZE;
+                    const targetYForThis = this.targetY + (op.y - p.y) * PIXEL_SIZE;
+
+                    const dist = Math.sqrt(Math.pow(this.x - targetXForThis, 2) + Math.pow(this.y - targetYForThis, 2));
+                    if (dist < 30) {
+                        // 互换目标像素位置信息
+                        const tempX = p.x;
+                        const tempY = p.y;
+                        p.x = op.x;
+                        p.y = op.y;
+                        op.x = tempX;
+                        op.y = tempY;
+
+                        this.x = this.targetX;
+                        this.y = this.targetY;
+                        this.isLocked = true;
+                        return true;
+                    }
+                }
+            }
+        }
+
         const dist = Math.sqrt(Math.pow(this.x - this.targetX, 2) + Math.pow(this.y - this.targetY, 2));
         if (dist < 30) {
             this.x = this.targetX;
@@ -300,6 +355,39 @@ class Piece {
         }
         return false;
     }
+}
+
+function applyLanguage() {
+    const lang = I18N[currentLang];
+    document.getElementById('main-title').innerText = lang.title;
+    document.getElementById('playBtn').innerText = lang.play;
+    document.getElementById('level-select-title').innerText = lang.selectRegion;
+    const menuDesc = document.querySelector('.menu-description');
+    if (menuDesc) menuDesc.innerText = lang.selectDesc;
+
+    document.getElementById('game-ui-title').innerText = lang.title;
+    document.getElementById('label-progress').innerText = lang.progress;
+    document.getElementById('win-title').innerText = lang.winTitle;
+    document.getElementById('win-desc').innerText = lang.winDesc;
+    document.getElementById('toLevelBtn').innerText = lang.map;
+    document.getElementById('nextBtn').innerText = lang.next;
+    document.getElementById('backToMenu').innerText = lang.back;
+
+    document.querySelectorAll('.dish-item').forEach(btn => {
+        const region = btn.dataset.region;
+        const levelIdx = parseInt(btn.dataset.level || 0);
+        const data = FOOD_LEVELS[region][levelIdx];
+        const key = `${region}_${levelIdx}`;
+
+        const nameEl = btn.querySelector('.dish-name');
+        if (nameEl) nameEl.innerText = data.name[currentLang];
+
+        if (completedLevels[key]) {
+            btn.classList.add('stamped');
+        } else {
+            btn.classList.remove('stamped');
+        }
+    });
 }
 
 function initGameFromData(data, region, idx) {
@@ -358,12 +446,51 @@ function initGameFromData(data, region, idx) {
     const storyEl = document.getElementById('story-text');
     if (storyEl) {
         storyEl.innerText = data.story[currentLang];
-        // 重新触发动画
         storyEl.style.animation = 'none';
         storyEl.offsetHeight;
         storyEl.style.animation = null;
     }
     render();
+}
+
+function showDishes(region) {
+    currentRegion = region;
+    const regionNames = {
+        asia: { en: "ASIA", zh: "亚洲风味" },
+        europe: { en: "EUROPE", zh: "欧陆风情" },
+        americas: { en: "AMERICAS", zh: "美洲经典" },
+        others: { en: "OTHERS", zh: "特调之选" }
+    };
+
+    document.getElementById('sub-menu-region').innerText = regionNames[region][currentLang];
+    document.getElementById('sub-menu-title').innerText = I18N[currentLang].subTitle;
+    document.getElementById('backToCarousel').innerText = `← ${I18N[currentLang].back}`;
+
+    dishList.innerHTML = '';
+
+    FOOD_LEVELS[region].forEach((levelData, idx) => {
+        const key = `${region}_${idx}`;
+        const item = document.createElement('button');
+        item.className = 'dish-item';
+        if (completedLevels[key]) item.classList.add('stamped');
+        item.dataset.region = region;
+        item.dataset.level = idx;
+
+        item.innerHTML = `
+            <span class="dish-name">${levelData.name[currentLang]}</span>
+        `;
+
+        item.addEventListener('click', () => {
+            dishScreen.classList.add('hidden');
+            gameUI.classList.remove('hidden');
+            initGameFromData(levelData, region, idx);
+        });
+
+        dishList.appendChild(item);
+    });
+
+    levelScreen.classList.add('hidden');
+    dishScreen.classList.remove('hidden');
 }
 
 function render() {
@@ -374,7 +501,18 @@ function render() {
     const progress = Math.round((lockedCount / pieces.length) * 100);
     progressEl.innerText = `${progress}%`;
     if (lockedCount === pieces.length && pieces.length > 0) {
-        setTimeout(() => winOverlay.classList.remove('hidden'), 500);
+        const key = `${currentRegion}_${currentLevelIdx}`;
+        if (!completedLevels[key]) {
+            completedLevels[key] = true;
+            localStorage.setItem('pixel_restaurant_completed', JSON.stringify(completedLevels));
+            applyLanguage(); // 更新菜单上的印章
+        }
+        setTimeout(() => {
+            const winIcon = document.querySelector('.win-icon');
+            const icons = ["🍳", "🍱", "🍕", "🍔", "🍜", "🍰", "🍵"];
+            winIcon.innerText = icons[Math.floor(Math.random() * icons.length)];
+            winOverlay.classList.remove('hidden');
+        }, 500);
     }
 }
 
@@ -397,8 +535,27 @@ canvas.addEventListener('mousedown', e => {
 window.addEventListener('mousemove', e => {
     if (draggingPiece) {
         const rect = canvas.getBoundingClientRect();
-        draggingPiece.x = e.clientX - rect.left - offset.x;
-        draggingPiece.y = e.clientY - rect.top - offset.y;
+        let nextX = e.clientX - rect.left - offset.x;
+        let nextY = e.clientY - rect.top - offset.y;
+
+        // 边界限制：计算 piece 的实际宽度和高度
+        const minPixelX = Math.min(...draggingPiece.pixels.map(p => p.x));
+        const maxPixelX = Math.max(...draggingPiece.pixels.map(p => p.x));
+        const minPixelY = Math.min(...draggingPiece.pixels.map(p => p.y));
+        const maxPixelY = Math.max(...draggingPiece.pixels.map(p => p.y));
+
+        const pieceLeft = nextX + minPixelX * PIXEL_SIZE;
+        const pieceRight = nextX + (maxPixelX + 1) * PIXEL_SIZE;
+        const pieceTop = nextY + minPixelY * PIXEL_SIZE;
+        const pieceBottom = nextY + (maxPixelY + 1) * PIXEL_SIZE;
+
+        if (pieceLeft < 0) nextX -= pieceLeft;
+        if (pieceRight > canvas.width) nextX -= (pieceRight - canvas.width);
+        if (pieceTop < 0) nextY -= pieceTop;
+        if (pieceBottom > canvas.height) nextY -= (pieceBottom - canvas.height);
+
+        draggingPiece.x = nextX;
+        draggingPiece.y = nextY;
         render();
     }
 });
@@ -432,15 +589,17 @@ if (langBtn) {
 
 applyLanguage(); // 初始化执行一次
 
-document.querySelectorAll('.level-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const region = btn.dataset.region;
-        const levelIdx = parseInt(btn.dataset.level || 0);
-        const levelData = FOOD_LEVELS[region][levelIdx];
-        levelScreen.classList.add('hidden');
-        gameUI.classList.remove('hidden');
-        initGameFromData(levelData, region, levelIdx);
+// 绑定风味卡片点击
+document.querySelectorAll('.flavor-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const region = card.dataset.region;
+        showDishes(region);
     });
+});
+
+document.getElementById('backToCarousel').addEventListener('click', () => {
+    dishScreen.classList.add('hidden');
+    levelScreen.classList.remove('hidden');
 });
 
 document.getElementById('homeBtn').addEventListener('click', () => {
