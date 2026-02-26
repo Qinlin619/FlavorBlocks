@@ -67,202 +67,402 @@ const FOOD_LEVELS = {
     "asia": [
         {
             name: { en: "Onigiri", zh: "饭团" },
-            dim: 5,
-            mask: [
-                [0, 0, 1, 0, 0],
-                [0, 1, 1, 1, 0],
-                [0, 1, 1, 1, 0],
-                [1, 1, 1, 1, 1],
-                [0, 0, 1, 0, 0]
-            ],
-            colors: { 1: "#000000" },
-            story: { en: "A grain of rice. Finding balance in Eastern delicacy.", zh: "故事从一粒米开始。在东方的精致中，寻找形状的平衡。" }
+            dim: 4,
+            mask: [[0, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 1], [0, 2, 2, 0]],
+            colors: { 1: "#ffffff", 2: "#333333" },
+            story: { en: "A simple classic. Pure rice, pure heart.", zh: "一颗简单的饭团，是米饭最纯粹的仪式感。" }
         },
         {
-            name: { en: "Sushi", zh: "三文鱼握寿司" },
+            name: { en: "Kushiyaki", zh: "串烧" },
             dim: 6,
             mask: [
-                [0, 2, 2, 2, 2, 0],
-                [0, 2, 2, 2, 2, 0],
-                [1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1]
+                [0, 0, 3, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 2, 2, 2, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 2, 2, 2, 0, 0],
+                [0, 0, 3, 0, 0, 0]
             ],
-            colors: { 1: "#ffffff", 2: "#ff4757" },
-            story: { en: "Minimalistic cutting, the highest respect for ingredients.", zh: "极简的切割，是对食材最高的敬意。" }
-        },
-        {
-            name: { en: "Dumpling", zh: "中国饺子" },
-            dim: 7,
-            mask: [
-                [0, 0, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 1, 0],
-                [1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 0],
-                [0, 0, 2, 2, 2, 0, 0]
-            ],
-            colors: { 1: "#fdfdfd", 2: "#e0e0e0" },
-            story: { en: "Wrapped with the warmth of reunion, every fold is a trace of time.", zh: "包裹着团圆的温度，每一个褶皱都是岁月的痕迹。" }
+            colors: { 1: "#d35400", 2: "#e67e22", 3: "#8d6e63" },
+            story: { en: "Sizzling over charcoal, the smoke carries the flavor.", zh: "炭火上的滋滋声，是深夜食堂最动听的音符。" }
         },
         {
             name: { en: "Ramen", zh: "日本拉面" },
+            dim: 8,
+            mask: [
+                [0, 0, 4, 4, 4, 4, 0, 0],
+                [0, 3, 3, 3, 3, 3, 3, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 2, 2, 2, 2, 2, 2, 1],
+                [1, 2, 2, 5, 2, 2, 2, 1],
+                [1, 2, 2, 2, 2, 2, 2, 1],
+                [0, 1, 2, 2, 2, 2, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0]
+            ],
+            colors: { 1: "#e74c3c", 2: "#ffffff", 3: "#f1c40f", 4: "#2c3e50", 5: "#ffeb3b" },
+            story: { en: "A warm bowl defined by its rich, pixelated broth.", zh: "一碗骨汤，足以慰藉像素世界的风尘。" }
+        },
+        {
+            name: { en: "Sushi Platter", zh: "寿司拼盘" },
             dim: 10,
             mask: [
-                [0, 0, 0, 4, 4, 0, 0, 0, 0, 0],
-                [0, 0, 4, 4, 4, 4, 0, 0, 0, 0],
-                [0, 3, 3, 3, 3, 3, 3, 3, 0, 0],
-                [3, 3, 5, 5, 3, 3, 3, 3, 3, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-                [1, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-                [0, 1, 2, 2, 2, 2, 2, 2, 1, 0],
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 2, 2, 0, 0, 0],
+                [1, 1, 1, 1, 2, 2, 2, 2, 0, 0],
+                [0, 3, 3, 0, 0, 4, 4, 0, 0, 0],
+                [3, 3, 3, 3, 4, 4, 4, 4, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 1, 1, 0, 0, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 2, 2, 0, 0, 2, 2, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ],
-            colors: { 1: "#e74c3c", 2: "#ffffff", 3: "#f1c40f", 4: "#34495e", 5: "#ffffff" },
-            story: { en: "Midnight comfort in a rich broth, pixelated lines sketch the noodle soup.", zh: "浓郁的汤底中，像素化的线条勾勒出深夜的慰藉。" }
+            colors: { 1: "#ffffff", 2: "#ff4757", 3: "#2ecc71", 4: "#f1c40f" },
+            story: { en: "Diversity on a wooden plate, each piece a small art.", zh: "指尖的艺术，在方寸之间变幻出万千风味。" }
         },
-        ...Array.from({ length: 10 }, (_, i) => ({
-            name: { en: `New Asia Dish ${i + 1}`, zh: `亚洲新品 ${i + 1}` },
-            dim: 3,
-            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+        {
+            name: { en: "Bento Box", zh: "便当盒" },
+            dim: 12,
+            mask: [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
+                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
+                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
+                [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 1],
+                [1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5, 1],
+                [1, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5, 1],
+                [1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 1],
+                [1, 6, 6, 6, 1, 5, 5, 5, 5, 5, 5, 1],
+                [1, 6, 6, 6, 1, 5, 5, 5, 5, 5, 5, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            colors: { 1: "#3e2723", 2: "#ffffff", 3: "#ffc107", 4: "#ff5252", 5: "#4caf50", 6: "#9e9e9e" },
+            story: { en: "A complete world packed inside a neat grid.", zh: "小小的格子里，装着大大的惊喜。" }
+        },
+        {
+            name: { en: "Xiao Long Bao", zh: "小笼包" },
+            dim: 13,
+            mask: Array(13).fill(0).map((_, y) => Array(13).fill(0).map((_, x) => (Math.sqrt((x - 6) ** 2 + (y - 7) ** 2) < 5 ? 1 : 0))),
+            colors: { 1: "#fefefe", 2: "#e0e0e0" },
+            story: { en: "Thins skin, rich soup, a burst of heat and flavor.", zh: "薄皮大馅，一口爆汁。" }
+        },
+        {
+            name: { en: "Bibimbap", zh: "石锅拌饭" },
+            dim: 15,
+            mask: Array(15).fill(0).map((_, y) => Array(15).fill(0).map((_, x) => (y > 10 && Math.abs(x - 7) < 6 ? 2 : (Math.sqrt((x - 7) ** 2 + (y - 6) ** 2) < 6 ? 1 : 0)))),
+            colors: { 1: "#ffffff", 2: "#424242", 3: "#ff5722", 4: "#4caf50" },
+            story: { en: "Colorful ingredients mixing into a rhythmic sizzle.", zh: "五彩斑斓的食材，在石锅里热烈起舞。" }
+        },
+        {
+            name: { en: "Dim Sum", zh: "广式点心" },
+            dim: 16,
+            mask: Array(16).fill(0).map((_, y) => 1), // Placeholder logic for complexity
             colors: { 1: "#f5f5f5" },
-            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
-        }))
+            story: { en: "The morning tea culture, thousands of flavors in small steamers.", zh: "一盅两件，叹茶人生。" }
+        },
+        {
+            name: { en: "Tom Yum", zh: "冬阴功汤" },
+            dim: 18,
+            mask: Array(18).fill(0).map((_, y) => 1),
+            colors: { 1: "#ff7043" },
+            story: { en: "Sour, spicy, and the aroma of Southeast Asia.", zh: "酸辣奔放，萨瓦迪卡式的热情。" }
+        },
+        {
+            name: { en: "Indian Thali", zh: "印度塔里" },
+            dim: 20,
+            mask: Array(20).fill(0).map((_, y) => 1),
+            colors: { 1: "#fb8c00" },
+            story: { en: "A round journey of spices and vibrant colors.", zh: "一场关于香料与色彩的圆满旅行。" }
+        }
     ],
     "europe": [
         {
-            name: { en: "Pizza", zh: "意式披萨" },
-            dim: 8,
-            mask: [
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 1, 2, 2, 2, 2, 1, 0],
-                [1, 2, 3, 2, 3, 2, 2, 1],
-                [1, 2, 2, 2, 2, 3, 2, 1],
-                [1, 2, 3, 2, 2, 2, 2, 1],
-                [0, 1, 2, 3, 2, 2, 1, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0]
-            ],
-            colors: { 1: "#d35400", 2: "#f1c40f", 3: "#e74c3c" },
-            story: { en: "Colors and temperature interweave on a round crust.", zh: "漫步在托斯卡纳的午后，色彩与温度交织在一张圆饼里。" }
+            name: { en: "Baguette", zh: "法棍" },
+            dim: 4,
+            mask: [[0, 1, 1, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 1, 1, 0]],
+            colors: { 1: "#edbf69" },
+            story: { en: "Simple flour and water, the soul of Paris.", zh: "面粉与水的奇迹，它是巴黎的呼吸。" }
+        },
+        {
+            name: { en: "Cheese", zh: "奶酪" },
+            dim: 5,
+            mask: [[1, 1, 1, 1, 1], [1, 0, 1, 0, 1], [1, 1, 1, 1, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 1]],
+            colors: { 1: "#ffd54f" },
+            story: { en: "Time is the secret ingredient of this gold.", zh: "时间是奶酪最好的调味师。" }
         },
         {
             name: { en: "Croissant", zh: "牛角包" },
             dim: 8,
-            mask: [
-                [0, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 1, 1, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 1, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 0, 0, 1, 1, 0, 0, 0]
-            ],
+            mask: [[0, 0, 0, 1, 1, 0, 0, 0], [0, 0, 1, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1, 0], [0, 0, 1, 1, 1, 1, 0, 0], [0, 0, 0, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
             colors: { 1: "#e67e22" },
-            story: { en: "The crisp morning of Paris, waking up in layered buttery scent.", zh: "巴黎清晨的酥脆，在层层叠叠的黄油香气中苏醒。" }
+            story: { en: "Layered crispy morning, smelling like butter.", zh: "层层叠叠的酥脆，唤醒沉睡的味蕾。" }
         },
-        ...Array.from({ length: 10 }, (_, i) => ({
-            name: { en: `New Europe Dish ${i + 1}`, zh: `欧陆新品 ${i + 1}` },
-            dim: 3,
-            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
-            colors: { 1: "#f5f5f5" },
-            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
-        }))
+        {
+            name: { en: "Macaron Tower", zh: "马卡龙塔" },
+            dim: 10,
+            mask: Array(10).fill(0).map((_, y) => 1),
+            colors: { 1: "#ff80ab", 2: "#b39ddb", 3: "#80deea" },
+            story: { en: "Sweet gems stacked into a colorful dream.", zh: "五彩斑斓的小圆饼，叠起少女心的梦。" }
+        },
+        {
+            name: { en: "Pizza", zh: "拿坡里披萨" },
+            dim: 11,
+            mask: Array(11).fill(0).map((_, y) => 1),
+            colors: { 1: "#f44336", 2: "#ffeb3b", 3: "#4caf50" },
+            story: { en: "Thin crust, fresh basil, the Italian standard.", zh: "薄底焦香，这才是披萨该有的样子。" }
+        },
+        {
+            name: { en: "Sausage Platter", zh: "德式香肠拼盘" },
+            dim: 13,
+            mask: Array(13).fill(0).map((_, y) => 1),
+            colors: { 1: "#795548" },
+            story: { en: "Hearty and rustic, the taste of the countryside.", zh: "粗犷豪放的满足感。" }
+        },
+        {
+            name: { en: "Afternoon Tea", zh: "英式下午茶" },
+            dim: 14,
+            mask: Array(14).fill(0).map((_, y) => 1),
+            colors: { 1: "#fdfdfd" },
+            story: { en: "Elegance on a three-tier stand, clinking of silver.", zh: "优雅的三层架，是午后最闲适的仪式。" }
+        },
+        {
+            name: { en: "Paella", zh: "西班牙海鲜饭" },
+            dim: 16,
+            mask: Array(16).fill(0).map((_, y) => 1),
+            colors: { 1: "#fbc02d" },
+            story: { en: "Golden saffron rice, the treasure of the ocean.", zh: "藏红花的金色，海鮮的鮮甜。" }
+        },
+        {
+            name: { en: "Black Forest", zh: "黑森林蛋糕" },
+            dim: 18,
+            mask: Array(18).fill(0).map((_, y) => 1),
+            colors: { 1: "#212121", 2: "#ffffff", 3: "#d32f2f" },
+            story: { en: "Chocolate, cream, and a hint of cherry spirits.", zh: "巧克力与樱桃的浪漫邂逅。" }
+        },
+        {
+            name: { en: "Greek Salad", zh: "希腊沙拉" },
+            dim: 20,
+            mask: Array(20).fill(0).map((_, y) => 1),
+            colors: { 1: "#4caf50", 2: "#ffffff", 3: "#212121" },
+            story: { en: "Fresh, healthy, the blue of the Mediterranean.", zh: "地中海的和风，伴着橄榄与奶酪。" }
+        }
     ],
     "americas": [
         {
-            name: { en: "Burger", zh: "芝士汉堡" },
-            dim: 8,
-            mask: [
-                [0, 1, 1, 1, 1, 1, 1, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [6, 6, 6, 6, 6, 6, 6, 6],
-                [3, 3, 3, 3, 3, 3, 3, 3],
-                [4, 4, 4, 4, 4, 4, 4, 4],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 1, 0]
-            ],
-            colors: { 1: "#e67e22", 6: "#f1c40f", 3: "#5d4037", 4: "#2ecc71" },
-            story: { en: "Busy free harbor, also an order of layers stacked.", zh: "这是自由港口的繁忙，也是层层叠加的秩序。" }
+            name: { en: "Avocado", zh: "酪梨" },
+            dim: 4,
+            mask: [[0, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 1], [0, 1, 1, 0]],
+            colors: { 1: "#8bc34a" },
+            story: { en: "The smooth green butter of the tropics.", zh: "森林奶油，轻盈丝滑。" }
         },
         {
-            name: { en: "Taco", zh: "墨西哥卷饼" },
-            dim: 8,
-            mask: [
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 1, 4, 4, 4, 4, 1, 0],
-                [1, 4, 3, 3, 3, 3, 4, 1],
-                [1, 4, 2, 2, 2, 2, 4, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1]
-            ],
-            colors: { 1: "#f1c40f", 2: "#e74c3c", 3: "#2ecc71", 4: "#d35400" },
-            story: { en: "All the passion wrapped in colorful flatbread.", zh: "所有的热情都被包裹在色彩鲜艳的饼皮之中。" }
+            name: { en: "Hot Dog", zh: "热狗" },
+            dim: 6,
+            mask: [[0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 0], [2, 2, 2, 2, 2, 2], [0, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]],
+            colors: { 1: "#ffb74d", 2: "#e57373" },
+            story: { en: "Lively baseball games and the scent of mustard.", zh: "球场上的欢呼声，总是伴着这一口香气。" }
+        },
+        {
+            name: { en: "Popcorn", zh: "爆米花" },
+            dim: 7,
+            mask: Array(7).fill(0).map((_, y) => 1),
+            colors: { 1: "#fff9c4", 2: "#e53935" },
+            story: { en: "Wait for the pop, wait for the magic.", zh: "在“砰砰”声中，魔法开始了。" }
         },
         {
             name: { en: "Donut", zh: "甜甜圈" },
             dim: 8,
-            mask: [
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 1, 1, 0],
-                [1, 1, 1, 2, 2, 1, 1, 1],
-                [1, 1, 2, 0, 0, 2, 1, 1],
-                [1, 1, 2, 0, 0, 2, 1, 1],
-                [1, 1, 1, 2, 2, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 1, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0]
-            ],
-            colors: { 1: "#ff9ff3", 2: "#feca57" },
-            story: { en: "A sweet ring of happiness, glazed with pink dreams.", zh: "一颗圆润的快乐，淋上粉红色的梦幻果酱。" }
+            mask: [[0, 1, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 0, 0, 0, 1, 1], [1, 1, 0, 0, 0, 0, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1, 0]],
+            colors: { 1: "#ff80ab" },
+            story: { en: "Sweet ring of happiness, colorful sprinkles.", zh: "让心情在那一圈甜美中起飞。" }
         },
-        ...Array.from({ length: 10 }, (_, i) => ({
-            name: { en: `New Americas Dish ${i + 1}`, zh: `美洲新品 ${i + 1}` },
-            dim: 3,
-            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
-            colors: { 1: "#f5f5f5" },
-            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
-        }))
+        {
+            name: { en: "Burger", zh: "双层汉堡" },
+            dim: 10,
+            mask: Array(10).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffa726", 2: "#5d4037", 3: "#43a047" },
+            story: { en: "Towering layers of classic American satisfaction.", zh: "层层叠加的自由与狂野。" }
+        },
+        {
+            name: { en: "Taco", zh: "墨西哥塔可" },
+            dim: 12,
+            mask: Array(12).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffd54f", 2: "#f44336", 3: "#4caf50" },
+            story: { en: "Spicy passion folded in a crunchy shell.", zh: "脆壳里的火辣热情。" }
+        },
+        {
+            name: { en: "Cookie", zh: "巧克力曲奇" },
+            dim: 14,
+            mask: Array(14).fill(0).map((_, y) => 1),
+            colors: { 1: "#8d6e63", 2: "#3e2723" },
+            story: { en: "Soft, chewy, and the melty chocolate dots.", zh: "软心曲奇，藏着融化的暖意。" }
+        },
+        {
+            name: { en: "Ceviche", zh: "秘鲁生鱼片" },
+            dim: 16,
+            mask: Array(16).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffffff", 2: "#81d4fa" },
+            story: { en: "Acidic freshness from the ancient Andes.", zh: "柠檬浸渍的鲜甜。" }
+        },
+        {
+            name: { en: "Nachos", zh: "纳乔斯" },
+            dim: 18,
+            mask: Array(18).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffeb3b", 2: "#00c853" },
+            story: { en: "Golden triangles for ultimate sharing.", zh: "分享快乐的金色三角阵。" }
+        },
+        {
+            name: { en: "BBQ Platter", zh: "巴西烤肉拼盘" },
+            dim: 20,
+            mask: Array(20).fill(0).map((_, y) => 1),
+            colors: { 1: "#4e342e" },
+            story: { en: "Smoke, fire, and the primitive taste of meat.", zh: "奔放的巴西风情。" }
+        }
     ],
-    "others": [
+    "africa": [
+        {
+            name: { en: "Pita", zh: "皮塔饼" },
+            dim: 4,
+            mask: [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 0, 0]],
+            colors: { 1: "#f5f5dc" },
+            story: { en: "The pocket bread, a historical container of flavors.", zh: "口袋里的美食乾坤。" }
+        },
+        {
+            name: { en: "Dates", zh: "椰枣" },
+            dim: 6,
+            mask: [[0, 1, 1, 0, 0, 0], [0, 1, 1, 0, 0, 0], [0, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0]],
+            colors: { 1: "#3e2723" },
+            story: { en: "The candy of the desert, natural sweetness.", zh: "沙漠里的天然糖果。" }
+        },
+        {
+            name: { en: "Hummus", zh: "鹰嘴豆泥" },
+            dim: 8,
+            mask: Array(8).fill(0).map((_, y) => 1),
+            colors: { 1: "#e0e0e0" },
+            story: { en: "Creamy bliss from crushed chickpeas.", zh: "细腻润滑，中东之魂。" }
+        },
+        {
+            name: { en: "Kebab", zh: "烤肉串" },
+            dim: 10,
+            mask: Array(10).fill(0).map((_, y) => 1),
+            colors: { 1: "#795548" },
+            story: { en: "Skewers of heritage, charred to perfection.", zh: "丝绸之路上传承的烟火气。" }
+        },
+        {
+            name: { en: "Falafel", zh: "法拉费" },
+            dim: 11,
+            mask: Array(11).fill(0).map((_, y) => 1),
+            colors: { 1: "#8d6e63" },
+            story: { en: "Crispy green balls of goodness.", zh: "酥脆的外表，翠绿的内心。" }
+        },
+        {
+            name: { en: "Tagine", zh: "塔吉锅" },
+            dim: 13,
+            mask: Array(13).fill(0).map((_, y) => 1),
+            colors: { 1: "#ff7043" },
+            story: { en: "The iconic cone lid, stewing magic inside.", zh: "神奇的尖顶帽，锁住每一滴原汁。" }
+        },
+        {
+            name: { en: "Couscous", zh: "库斯库斯" },
+            dim: 15,
+            mask: Array(15).fill(0).map((_, y) => 1),
+            colors: { 1: "#fff176" },
+            story: { en: "Tiny grains, massive tradition.", zh: "北非明珠，粒粒金黄。" }
+        },
+        {
+            name: { en: "Injera", zh: "英杰拉" },
+            dim: 17,
+            mask: Array(17).fill(0).map((_, y) => 1),
+            colors: { 1: "#d7ccc8" },
+            story: { en: "The flatbread that is also your plate and fork.", zh: "既是盘子，也是餐具。" }
+        },
+        {
+            name: { en: "Turkish Delight", zh: "土耳其软糖" },
+            dim: 19,
+            mask: Array(19).fill(0).map((_, y) => 1),
+            colors: { 1: "#f06292" },
+            story: { en: "Soft, rose-scented cubes of ancient joy.", zh: "指尖的香甜软糯。" }
+        },
+        {
+            name: { en: "Baklava", zh: "巴卡拉瓦" },
+            dim: 20,
+            mask: Array(20).fill(0).map((_, y) => 1),
+            colors: { 1: "#edbf69" },
+            story: { en: "Layers of thin pastry and honey-soaked nuts.", zh: "千层酥脆，蜜意浓情。" }
+        }
+    ],
+    "oceania": [
+        {
+            name: { en: "Kiwi", zh: "奇异果" },
+            dim: 4,
+            mask: [[0, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 1], [0, 1, 1, 0]],
+            colors: { 1: "#8bc34a" },
+            story: { en: "The emerald fruit of the Pacific.", zh: "太平洋的祖母绿珍宝。" }
+        },
+        {
+            name: { en: "Toast", zh: "维吉麦吐司" },
+            dim: 6,
+            mask: [[1, 1, 1, 1, 1, 1], [1, 2, 2, 2, 2, 1], [1, 2, 2, 2, 2, 1], [1, 2, 2, 2, 2, 1], [1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]],
+            colors: { 1: "#ffa726", 2: "#212121" },
+            story: { en: "A bold Aussie salty morning icon.", zh: "澳洲人刻在DNA里的咸鲜。" }
+        },
+        {
+            name: { en: "Meat Pie", zh: "澳洲肉馅饼" },
+            dim: 8,
+            mask: Array(8).fill(0).map((_, y) => 1),
+            colors: { 1: "#edbf69" },
+            story: { en: "The humble hero of Australian footy matches.", zh: "捧在手边的温暖慰藉。" }
+        },
         {
             name: { en: "Fish & Chips", zh: "炸鱼薯条" },
-            dim: 9,
-            mask: [
-                [0, 0, 0, 0, 0, 1, 1, 1, 1],
-                [0, 0, 0, 0, 1, 1, 1, 1, 1],
-                [2, 2, 2, 1, 1, 1, 1, 1, 1],
-                [2, 2, 2, 1, 1, 1, 1, 1, 1],
-                [2, 2, 2, 0, 0, 1, 1, 1, 0],
-                [3, 3, 3, 3, 3, 3, 3, 3, 3],
-                [0, 3, 3, 3, 3, 3, 3, 3, 0]
-            ],
-            colors: { 1: "#e67e22", 2: "#f1c40f", 3: "#ecf0f1" },
-            story: { en: "Classic island comfort, wrapped in newspaper and tradition.", zh: "经典的海岛慰藉，包裹在旧报纸与传统之中。" }
+            dim: 10,
+            mask: Array(10).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffca28" },
+            story: { en: "Classic island comfort, newspaper not included.", zh: "海风带走的，只有这一口酥香。" }
         },
         {
-            name: { en: "Hot Pot", zh: "重庆火锅" },
-            dim: 10,
-            mask: [
-                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
-                [0, 2, 1, 1, 1, 1, 1, 1, 2, 0],
-                [2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-                [2, 1, 3, 1, 1, 1, 3, 1, 1, 2],
-                [2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-                [2, 1, 1, 3, 1, 3, 1, 1, 1, 2],
-                [0, 2, 1, 1, 1, 1, 1, 1, 2, 0],
-                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
-                [0, 0, 0, 4, 0, 0, 4, 0, 0, 0],
-                [0, 0, 4, 4, 4, 4, 4, 4, 0, 0]
-            ],
-            colors: { 1: "#c0392b", 2: "#bdc3c7", 3: "#f1c40f", 4: "#2c3e50" },
-            story: { en: "Bubbling red oil, spicy passion from the mist of Chongqing.", zh: "翻滚的红油，是山城迷雾中沸腾的热情。" }
+            name: { en: "Fairy Bread", zh: "仙女面包" },
+            dim: 11,
+            mask: Array(11).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffffff", 2: "#ff7043", 3: "#4caf50" },
+            story: { en: "Butter, sprinkles, and childhood memories.", zh: "彩色糖珠洒下的童年幻境。" }
         },
-        ...Array.from({ length: 10 }, (_, i) => ({
-            name: { en: `Special Special ${i + 1}`, zh: `特调新品 ${i + 1}` },
-            dim: 3,
-            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
-            colors: { 1: "#f5f5f5" },
-            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
-        }))
+        {
+            name: { en: "Lamington", zh: "拉明顿蛋糕" },
+            dim: 13,
+            mask: Array(13).fill(0).map((_, y) => 1),
+            colors: { 1: "#4e342e", 2: "#ffffff" },
+            story: { en: "The National Cake, rolled in coconut snow.", zh: "裹着椰丝白雪的巧克力方块。" }
+        },
+        {
+            name: { en: "Mud Crab", zh: "泥蟹" },
+            dim: 15,
+            mask: Array(15).fill(0).map((_, y) => 1),
+            colors: { 1: "#f44336" },
+            story: { en: "Majestic flavor from the deep estuaries.", zh: "来自远古湿地的鲜味霸主。" }
+        },
+        {
+            name: { en: "Flat White", zh: "平白咖啡" },
+            dim: 16,
+            mask: Array(16).fill(0).map((_, y) => 1),
+            colors: { 1: "#6d4c41", 2: "#ffffff" },
+            story: { en: "Silky microfoam, the Oceania caffeine standard.", zh: "天鹅绒般的奶泡，大洋洲的清晨之光。" }
+        },
+        {
+            name: { en: "Pavlova", zh: "帕夫洛娃蛋糕" },
+            dim: 18,
+            mask: Array(18).fill(0).map((_, y) => 1),
+            colors: { 1: "#ffffff", 2: "#ff4081" },
+            story: { en: "As clouds as a ballerina's dress.", zh: "如天鹅湖般的轻盈与纯洁。" }
+        },
+        {
+            name: { en: "Seafood", zh: "海鲜大拼盘" },
+            dim: 20,
+            mask: Array(20).fill(0).map((_, y) => 1),
+            colors: { 1: "#ef5350", 2: "#ffa726" },
+            story: { en: "An extravaganza of the bountiful ocean.", zh: "大海慷慨赋予的终极盛宴。" }
+        }
     ]
 };
 
@@ -299,24 +499,47 @@ class Piece {
     }
 
     draw(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.isLocked ? 1.0 : 0.9;
+        ctx.save();
+
+        const piecePath = new Path2D();
         this.pixels.forEach(p => {
             const rx = this.x + p.x * PIXEL_SIZE;
             const ry = this.y + p.y * PIXEL_SIZE;
-            ctx.fillRect(rx, ry, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
+            piecePath.rect(rx, ry, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
+        });
 
-            // 为浅色块添加一个极淡的轮廓线，增强辨识度
-            ctx.strokeStyle = "rgba(0,0,0,0.05)";
-            ctx.lineWidth = 1;
+        // 1. 先绘制整体阴影（如果未锁定）
+        if (!this.isLocked) {
+            ctx.shadowColor = "rgba(0,0,0,0.15)";
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 5;
+            ctx.fillStyle = this.color;
+            ctx.fill(piecePath);
+
+            // 绘制完阴影后立即关闭，防止后续描边也带阴影
+            ctx.shadowColor = "transparent";
+        }
+
+        // 2. 绘制实际色块填充
+        ctx.fillStyle = this.color;
+        ctx.fill(piecePath);
+
+        // 3. 绘制每个小方块的边界（这部分不带阴影）
+        ctx.strokeStyle = this.isLocked ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.12)";
+        ctx.lineWidth = 1;
+        this.pixels.forEach(p => {
+            const rx = this.x + p.x * PIXEL_SIZE;
+            const ry = this.y + p.y * PIXEL_SIZE;
             ctx.strokeRect(rx, ry, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
         });
-        ctx.globalAlpha = 1.0;
 
-        // 如果选中，画个描边
+        ctx.restore();
+
+        // 4. 如果选中，画个更明显的黑色加粗描边
         if (draggingPiece === this) {
             ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             this.pixels.forEach(p => {
                 ctx.strokeRect(this.x + p.x * PIXEL_SIZE, this.y + p.y * PIXEL_SIZE, PIXEL_SIZE - 1, PIXEL_SIZE - 1);
             });
@@ -324,10 +547,18 @@ class Piece {
     }
 
     drawTarget(ctx) {
-        // 目标槽位颜色：稍微深一点的灰色，并带上虚线边框感
-        ctx.fillStyle = "rgba(0,0,0,0.03)";
+        // 目标槽位颜色：使其在灰/白色背景下都清晰
+        ctx.fillStyle = "rgba(255,255,255,0.4)"; // 在深灰色背景上显示浅色区域
         this.pixels.forEach(p => {
             ctx.fillRect(
+                this.targetX + p.x * PIXEL_SIZE,
+                this.targetY + p.y * PIXEL_SIZE,
+                PIXEL_SIZE - 1,
+                PIXEL_SIZE - 1
+            );
+            // 给目标槽位也带上一层透明细线
+            ctx.strokeStyle = "rgba(0,0,0,0.05)";
+            ctx.strokeRect(
                 this.targetX + p.x * PIXEL_SIZE,
                 this.targetY + p.y * PIXEL_SIZE,
                 PIXEL_SIZE - 1,
@@ -345,52 +576,68 @@ class Piece {
         });
     }
 
+    _getMinCoords() {
+        let minX = Infinity, minY = Infinity;
+        for (let p of this.pixels) {
+            if (p.x < minX) minX = p.x;
+            if (p.y < minY) minY = p.y;
+        }
+        return { x: minX, y: minY };
+    }
+
+    _getNormalizedPixels() {
+        const min = this._getMinCoords();
+        return this.pixels
+            .map(p => ({ x: p.x - min.x, y: p.y - min.y }))
+            .sort((a, b) => a.x - b.x || a.y - b.y);
+    }
+
+    _hasSameShape(other) {
+        if (this.pixels.length !== other.pixels.length) return false;
+        const norm1 = this._getNormalizedPixels();
+        const norm2 = other._getNormalizedPixels();
+        for (let i = 0; i < norm1.length; i++) {
+            if (norm1[i].x !== norm2[i].x || norm1[i].y !== norm2[i].y) return false;
+        }
+        return true;
+    }
+
     checkSnap() {
         if (this.isLocked) return true;
 
-        // 特殊逻辑：单块碎片可以互换目标位置，如果它们颜色相同且都是 1x1
-        if (this.pixels.length === 1) {
-            const p = this.pixels[0];
-            for (let other of pieces) {
-                // 如果是其他未鎖定的同色单块
-                if (other !== this && !other.isLocked && other.pixels.length === 1 && other.colorId === this.colorId) {
-                    const op = other.pixels[0];
-                    // 检查此 piece 是否靠近 other piece 的目标位置
-                    const targetXForThis = this.targetX + (op.x - p.x) * PIXEL_SIZE;
-                    const targetYForThis = this.targetY + (op.y - p.y) * PIXEL_SIZE;
+        // 查找所有形状和颜色相同且尚未锁定的碎片（包括自己）
+        const identicalPieces = pieces.filter(p =>
+            !p.isLocked &&
+            p.colorId === this.colorId &&
+            this._hasSameShape(p)
+        );
 
-                    const dist = Math.sqrt(Math.pow(this.x - targetXForThis, 2) + Math.pow(this.y - targetYForThis, 2));
-                    if (dist < 30) {
-                        const oldPX = p.x;
-                        const oldPY = p.y;
-                        const oldOpX = op.x;
-                        const oldOpY = op.y;
+        for (let targetPiece of identicalPieces) {
+            // 计算如果吸附到 targetPiece 的目标位置，当前 piece 应该处于的绘制坐标
+            const thisMin = this._getMinCoords();
+            const targetMin = targetPiece._getMinCoords();
 
-                        // 互换目标像素位置信息 (逻辑坐标)
-                        p.x = oldOpX;
-                        p.y = oldOpY;
-                        op.x = oldPX;
-                        op.y = oldPY;
+            const idealX = this.targetX + (targetMin.x - thisMin.x) * PIXEL_SIZE;
+            const idealY = this.targetY + (targetMin.y - thisMin.y) * PIXEL_SIZE;
 
-                        // 同时补偿 other 的绘制坐标，确保其在屏幕上的物理位置保持不变，防止“瞬移”
-                        other.x += (oldOpX - oldPX) * PIXEL_SIZE;
-                        other.y += (oldOpY - oldPY) * PIXEL_SIZE;
+            const dist = Math.sqrt(Math.pow(this.x - idealX, 2) + Math.pow(this.y - idealY, 2));
+            if (dist < 30) {
+                // 如果不是自己的原始位置，则交换像素坐标信息
+                if (targetPiece !== this) {
+                    const tempPixels = this.pixels;
+                    this.pixels = targetPiece.pixels;
+                    targetPiece.pixels = tempPixels;
 
-                        this.x = this.targetX;
-                        this.y = this.targetY;
-                        this.isLocked = true;
-                        return true;
-                    }
+                    // 补偿被交换碎片的视觉位置，防止瞬间位移
+                    targetPiece.x += (targetMin.x - thisMin.x) * PIXEL_SIZE;
+                    targetPiece.y += (targetMin.y - thisMin.y) * PIXEL_SIZE;
                 }
-            }
-        }
 
-        const dist = Math.sqrt(Math.pow(this.x - this.targetX, 2) + Math.pow(this.y - this.targetY, 2));
-        if (dist < 30) {
-            this.x = this.targetX;
-            this.y = this.targetY;
-            this.isLocked = true;
-            return true;
+                this.x = this.targetX;
+                this.y = this.targetY;
+                this.isLocked = true;
+                return true;
+            }
         }
         return false;
     }
@@ -423,9 +670,17 @@ function applyLanguage() {
     document.getElementById('label-progress').innerText = lang.progress;
     document.getElementById('win-title').innerText = lang.winTitle;
     document.getElementById('win-desc').innerText = lang.winDesc;
-    document.getElementById('toLevelBtn').innerText = lang.map;
-    document.getElementById('restartWinBtn').innerText = lang.restart;
-    document.getElementById('nextBtn').innerText = lang.next;
+    const mapLabel = document.querySelector('#toLevelBtn .win-btn-label');
+    if (mapLabel) mapLabel.innerText = lang.map;
+    else document.getElementById('toLevelBtn').innerText = lang.map;
+
+    const restartLabel = document.querySelector('#restartWinBtn .win-btn-label');
+    if (restartLabel) restartLabel.innerText = lang.restart;
+    else document.getElementById('restartWinBtn').innerText = lang.restart;
+
+    const nextLabel = document.querySelector('#nextBtn .win-btn-label');
+    if (nextLabel) nextLabel.innerText = lang.next;
+    else document.getElementById('nextBtn').innerText = lang.next;
     document.getElementById('backToMenu').innerText = lang.back;
     const backToCarousel = document.getElementById('backToCarousel');
     if (backToCarousel) backToCarousel.innerText = lang.back;
@@ -456,6 +711,25 @@ function applyLanguage() {
             btn.classList.remove('stamped');
         }
     });
+
+    const regionNames = {
+        asia: { en: "ASIA", zh: "亚洲风味" },
+        europe: { en: "EUROPE", zh: "欧陆风情" },
+        americas: { en: "AMERICAS", zh: "美洲经典" },
+        africa: { en: "AFRICA", zh: "非洲风情" },
+        oceania: { en: "OCEANIA", zh: "大洋洲味道" }
+    };
+    document.querySelectorAll('.flavor-card').forEach(card => {
+        const region = card.dataset.region;
+        const h3 = card.querySelector('.card-header h3');
+        if (h3) {
+            h3.innerText = regionNames[region][currentLang];
+        }
+        const exploreText = card.querySelector('.explore-text');
+        if (exploreText) {
+            exploreText.innerText = currentLang === 'en' ? "EXPLORE DISHES" : "探索菜品";
+        }
+    });
 }
 
 function initGameFromData(data, region, idx) {
@@ -482,7 +756,7 @@ function initGameFromData(data, region, idx) {
 
     pieces = [];
     canvas.width = window.innerWidth * 0.9;
-    canvas.height = window.innerHeight * 0.7;
+    canvas.height = window.innerHeight * 0.6; // Reduced from 0.7 to ensure UI fits on screen
 
     const targetX = (canvas.width - mask[0].length * PIXEL_SIZE) / 2;
     const targetY = (canvas.height - mask.length * PIXEL_SIZE) / 2;
@@ -529,7 +803,8 @@ function showDishes(region) {
         asia: { en: "ASIA", zh: "亚洲风味" },
         europe: { en: "EUROPE", zh: "欧陆风情" },
         americas: { en: "AMERICAS", zh: "美洲经典" },
-        others: { en: "OTHERS", zh: "特调之选" }
+        africa: { en: "AFRICA", zh: "非洲风情" },
+        oceania: { en: "OCEANIA", zh: "大洋洲味道" }
     };
 
     document.getElementById('sub-menu-region').innerText = regionNames[region][currentLang];
@@ -571,20 +846,53 @@ function drawWinPreview() {
     const cols = mask[0].length;
 
     const previewSize = 200;
-    const padding = 20;
-    const cellSize = Math.min((previewSize - padding * 2) / cols, (previewSize - padding * 2) / rows);
+    const padding = 25; // Slightly more padding for aesthetics
+
+    // 找到非零像素的实际边界
+    let minX = cols, maxX = -1, minY = rows, maxY = -1;
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            if (mask[y][x] !== 0) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+    }
+
+    // 如果是空关卡则直接返回
+    if (maxX === -1) return;
+
+    const contentWidth = maxX - minX + 1;
+    const contentHeight = maxY - minY + 1;
+
+    // 根据实际内容大小计算格子尺寸，确保内容居中且撑满
+    const cellSize = Math.min((previewSize - padding * 2) / contentWidth, (previewSize - padding * 2) / contentHeight);
 
     pCtx.clearRect(0, 0, previewSize, previewSize);
 
-    const offsetX = (previewSize - cols * cellSize) / 2;
-    const offsetY = (previewSize - rows * cellSize) / 2;
+    // 计算居中偏移量
+    const offsetX = (previewSize - contentWidth * cellSize) / 2;
+    const offsetY = (previewSize - contentHeight * cellSize) / 2;
 
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
+    for (let y = minY; y <= maxY; y++) {
+        for (let x = minX; x <= maxX; x++) {
             const colorId = mask[y][x];
             if (colorId !== 0) {
                 pCtx.fillStyle = currentLevelData.colors[colorId] || "#000";
-                pCtx.fillRect(offsetX + x * cellSize, offsetY + y * cellSize, cellSize - 0.5, cellSize - 0.5);
+
+                const px = Math.floor(offsetX + (x - minX) * cellSize);
+                const py = Math.floor(offsetY + (y - minY) * cellSize);
+                const pw = Math.ceil(cellSize) + 1;
+                const ph = Math.ceil(cellSize) + 1;
+
+                pCtx.fillRect(px, py, pw, ph);
+
+                // 极淡的边框
+                pCtx.strokeStyle = "rgba(0,0,0,0.06)";
+                pCtx.lineWidth = 1;
+                pCtx.strokeRect(px, py, pw, ph);
             }
         }
     }
@@ -594,8 +902,16 @@ let isVictoryTriggered = false;
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. 绘制目标底槽
     pieces.forEach(p => p.drawTarget(ctx));
-    pieces.forEach(p => p.draw(ctx));
+
+    // 2. 绘制已锁定的碎片（作为背景底层）
+    pieces.filter(p => p.isLocked).forEach(p => p.draw(ctx));
+
+    // 3. 绘制未锁定的碎片（悬浮在顶层，确保容易被看到和拾取）
+    pieces.filter(p => !p.isLocked).forEach(p => p.draw(ctx));
+
     const lockedCount = pieces.filter(p => p.isLocked).length;
     const progress = Math.round((lockedCount / pieces.length) * 100);
     progressEl.innerText = `${progress}%`;
@@ -776,7 +1092,7 @@ document.getElementById('backToCarousel').addEventListener('click', () => {
 
 document.getElementById('homeBtn').addEventListener('click', () => {
     gameUI.classList.add('hidden');
-    startScreen.classList.remove('hidden');
+    showDishes(currentRegion);
 });
 
 document.getElementById('restartWinBtn').addEventListener('click', () => {
@@ -817,11 +1133,11 @@ document.getElementById('nextBtn').addEventListener('click', () => {
 });
 
 document.getElementById('hintBtn').addEventListener('click', () => {
-    initGameFromData(currentLevelData);
+    initGameFromData(currentLevelData, currentRegion, currentLevelIdx);
 });
 
 window.addEventListener('resize', () => {
     if (!gameUI.classList.contains('hidden') && currentLevelData) {
-        initGameFromData(currentLevelData);
+        initGameFromData(currentLevelData, currentRegion, currentLevelIdx);
     }
 });

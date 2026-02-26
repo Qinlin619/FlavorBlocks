@@ -407,14 +407,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: radial-gradient(circle at 50% 50%, #fdfdfd 0%, #f4f4f4 100%);
     display: flex;
     flex-direction: column;
     z-index: 500;
 }
 
 #game-ui header {
-    padding: 2rem 4rem;
+    padding: 1.5rem 4rem;
+    /* Reduced from 2rem */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -438,15 +439,19 @@ body {
 }
 
 .stats .label {
-    font-size: 0.7rem;
-    color: #bbb;
+    font-size: 0.65rem;
+    color: #999;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    font-weight: 500;
+    margin-right: 0.5rem;
 }
 
 .stats .value {
-    font-size: 1.5rem;
-    font-weight: 300;
+    font-size: 1.8rem;
+    font-weight: 200;
+    color: #1a1a1a;
+    font-variant-numeric: tabular-nums;
 }
 
 #game-container {
@@ -454,16 +459,39 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Vertical distribution */
     align-items: center;
-    padding-bottom: 5vh;
+    padding-bottom: 2vh;
+    /* Reduced padding */
+    overflow: hidden;
+    /* Prevent container from growing indefinitely */
 }
 
 .canvas-wrapper {
-    background: #fdfdfd;
-    padding: 0;
-    border: 1px solid #eee;
-    border-radius: 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+    background: #ebebeb;
+    /* Neutral gray that lets colors pop */
+    padding: 2.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 40px;
+    /* More elegant rounded frame */
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.04),
+        inset 0 1px 3px rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.canvas-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    /* Subtle texture to avoid "cheap" flat gray */
+    pointer-events: none;
 }
 
 canvas {
@@ -476,8 +504,10 @@ canvas:active {
 }
 
 .bottom-controls {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    /* Reduced from 2rem */
+    margin-bottom: 1rem;
+    /* Reduced from 2rem */
 }
 
 .premium-btn {
@@ -513,7 +543,8 @@ canvas:active {
 }
 
 .icon-btn:hover {
-    transform: translateX(-3px);
+    transform: translateX(-5px);
+    color: var(--accent-color);
 }
 
 /* --- WIN OVERLAY --- */
@@ -529,38 +560,84 @@ canvas:active {
 .win-content {
     text-align: center;
     max-width: 500px;
-    padding: 4rem;
-    border: 1px solid #eee;
+    padding: 3rem;
+    border: none;
     background: #fff;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.05);
-    transform: scale(0.9);
-    filter: blur(5px);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+    border-radius: 40px;
+    position: relative;
+}
+
+.win-preview-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+#win-preview-canvas {
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    padding: 10px;
+    background: #eeeeee;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#win-title {
+    position: absolute;
+    top: -5px;
+    right: -15px;
+    margin: 0;
+    padding: 0.3rem 1.2rem;
+    color: #e74c3c;
+    border: 1.5px solid #e74c3c;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform: rotate(12deg) scale(0);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(2px);
+    z-index: 2;
+    pointer-events: none;
+    white-space: nowrap;
     opacity: 0;
+    box-shadow: 0 0 0 rgba(231, 76, 60, 0.2);
 }
 
-#win-overlay:not(.hidden) .win-content {
-    animation: winStampIn 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+#win-overlay:not(.hidden) #win-title {
+    animation: stampSlam 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0.8s both;
 }
 
-@keyframes winStampIn {
+@keyframes stampSlam {
     0% {
-        transform: scale(3);
-        filter: blur(20px);
         opacity: 0;
-    }
-
-    70% {
-        transform: scale(1);
-        filter: blur(0);
-        opacity: 1;
-        box-shadow: 0 60px 120px rgba(0, 0, 0, 0.2);
+        transform: translate(30px, -30px) scale(3) rotate(35deg);
+        filter: blur(10px);
     }
 
     100% {
-        transform: scale(1);
-        filter: blur(0);
         opacity: 1;
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.05);
+        transform: translate(0, 0) scale(1) rotate(12deg);
+        filter: blur(0);
+        box-shadow: 4px 4px 0 rgba(231, 76, 60, 0.1);
+    }
+}
+
+#win-overlay:not(.hidden) .win-content {
+    animation: winContentFade 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes winContentFade {
+    0% {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -572,14 +649,41 @@ canvas:active {
 
 .win-actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     justify-content: center;
     margin-top: 3rem;
 }
 
-.win-actions .premium-btn {
-    padding: 0.6rem 1.5rem;
+.win-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #999;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    padding: 10px 15px;
+}
+
+.win-icon-btn:hover {
+    color: #000;
+    transform: translateY(-3px);
+}
+
+.win-icon-btn svg {
+    width: 26px;
+    height: 26px;
+    stroke-width: 1.5;
+}
+
+.win-btn-label {
     font-size: 0.75rem;
+    font-weight: 400;
+    color: inherit;
+    letter-spacing: 1px;
 }
 
 /* UTILS */

@@ -1,0 +1,11 @@
+{
+  "name": "flavor-blocks",
+  "version": "1.0.0",
+  "description": "寻味方块",
+  "scripts": {
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

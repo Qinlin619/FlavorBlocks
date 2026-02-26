@@ -76,11 +76,22 @@
                             </div>
                         </div>
 
-                        <!-- 特调之选卡片 -->
-                        <div class="flavor-card" data-region="others">
+                        <!-- 非洲草原卡片 -->
+                        <div class="flavor-card" data-region="africa">
                             <div class="card-header">
                                 <span class="card-num">04</span>
-                                <h3>OTHERS / 特调之选</h3>
+                                <h3>AFRICA / 非洲风情</h3>
+                            </div>
+                            <div class="card-footer">
+                                <span class="explore-text">EXPLORE DISHES</span>
+                            </div>
+                        </div>
+
+                        <!-- 大洋洲岛屿卡片 -->
+                        <div class="flavor-card" data-region="oceania">
+                            <div class="card-header">
+                                <span class="card-num">05</span>
+                                <h3>OCEANIA / 大洋洲味道</h3>
                             </div>
                             <div class="card-footer">
                                 <span class="explore-text">EXPLORE DISHES</span>
@@ -140,14 +151,37 @@
         <!-- 获胜弹窗 -->
         <div id="win-overlay" class="overlay hidden">
             <div class="win-content">
-                <canvas id="win-preview-canvas" width="200" height="200"
-                    style="margin-bottom: 2rem; image-rendering: pixelated;"></canvas>
-                <h2 id="win-title">DISH READY!</h2>
+                <div class="win-preview-container">
+                    <canvas id="win-preview-canvas" width="200" height="200"
+                        style="image-rendering: pixelated;"></canvas>
+                    <h2 id="win-title">DISH READY!</h2>
+                </div>
                 <p id="win-desc">Everything in its right place.</p>
                 <div class="win-actions">
-                    <button id="toLevelBtn" class="premium-btn">MENU</button>
-                    <button id="restartWinBtn" class="premium-btn">RESTART</button>
-                    <button id="nextBtn" class="premium-btn secondary">NEXT</button>
+                    <button id="toLevelBtn" class="win-icon-btn" title="MENU">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                        <span class="win-btn-label">菜单</span>
+                    </button>
+                    <button id="restartWinBtn" class="win-icon-btn" title="RESTART">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <polyline points="3 3 3 8 8 8"></polyline>
+                        </svg>
+                        <span class="win-btn-label">重做</span>
+                    </button>
+                    <button id="nextBtn" class="win-icon-btn" title="NEXT DISH">
+                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="6 4 20 12 6 20"></polygon>
+                        </svg>
+                        <span class="win-btn-label">下一道菜</span>
+                    </button>
                 </div>
             </div>
         </div>
