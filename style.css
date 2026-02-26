@@ -53,9 +53,19 @@ body {
 
 .hero-title {
     font-size: 6rem;
-    font-weight: 200;
+    font-weight: 100;
     letter-spacing: 0.8rem;
     margin: 0;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+}
+
+.hero-title.is-en {
+    font-size: 5rem;
+    letter-spacing: 1.2rem;
+    font-weight: 100;
 }
 
 .hero-line {
@@ -90,6 +100,37 @@ body {
 
 .play-trigger:hover {
     transform: scale(1.1);
+}
+
+.hero-credits {
+    margin-top: 4rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.4rem;
+    color: #ccc;
+    font-weight: 300;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+}
+
+.pixel-fragment {
+    opacity: 0;
+    animation: fragmentAssemble 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes fragmentAssemble {
+    0% {
+        opacity: 0;
+        transform: translate(var(--rx), var(--ry)) scale(1.5);
+        filter: blur(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+        filter: blur(0);
+    }
 }
 
 .hero-bg-accent {
@@ -129,15 +170,22 @@ body {
 
 .menu-top-header {
     margin-bottom: 6vh;
-    text-align: left;
+    text-align: center;
 }
 
 .menu-top-header h2 {
     font-size: 5rem;
-    font-weight: 200;
-    letter-spacing: 2rem;
+    font-weight: 100;
+    letter-spacing: 1.5rem;
     color: #1a1a1a;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.5s ease;
+}
+
+.menu-top-header h2.is-en {
+    font-weight: 100;
+    letter-spacing: 2.2rem;
+    font-size: 4.5rem;
 }
 
 .menu-description {
@@ -145,6 +193,15 @@ body {
     color: #999;
     letter-spacing: 2px;
     text-transform: uppercase;
+}
+
+.carousel-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
 }
 
 .flavor-carousel {
@@ -155,10 +212,45 @@ body {
     padding: 2rem 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    cursor: grab;
+    scroll-behavior: smooth;
 }
 
 .flavor-carousel::-webkit-scrollbar {
     display: none;
+}
+
+.nav-btn {
+    background: none;
+    border: 1px solid #eee;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #bbb;
+    transition: all 0.3s;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.nav-btn:hover {
+    border-color: #000;
+    color: #000;
+    transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+    .nav-btn {
+        display: none;
+    }
+
+    .carousel-wrapper {
+        gap: 0;
+    }
 }
 
 .flavor-card {
@@ -235,10 +327,21 @@ body {
 }
 
 .dish-list-container {
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.dish-list-container::-webkit-scrollbar {
+    width: 2px;
+}
+
+.dish-list-container::-webkit-scrollbar-thumb {
+    background: #eee;
 }
 
 .dish-item {
@@ -281,7 +384,7 @@ body {
 }
 
 .menu-back-btn {
-    align-self: flex-start;
+    align-self: center;
     background: none;
     border: none;
     color: #bbb;
@@ -290,6 +393,7 @@ body {
     cursor: pointer;
     margin-top: 3rem;
     text-transform: uppercase;
+    transition: color 0.3s;
 }
 
 .menu-back-btn:hover {

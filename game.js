@@ -27,10 +27,10 @@ let completedLevels = JSON.parse(localStorage.getItem('pixel_restaurant_complete
 
 const I18N = {
     en: {
-        title: "Pixel Restaurant",
+        title: "Flavor Blocks",
         play: "OPEN MENU",
         selectRegion: "MENU",
-        selectDesc: "Enjoy varied delicacies",
+        selectDesc: "Discover the global flavors within every pixel",
         subTitle: "SELECT DISH",
         served: "SERVED",
         progress: "PREPARATION",
@@ -39,13 +39,14 @@ const I18N = {
         map: "MENU",
         next: "NEXT DISH",
         congrats: "Incredible! You've tasted every delicacy in our restaurant!",
-        back: "CLOSE"
+        back: "CLOSE",
+        producer: "PRODUCER: 伞伞"
     },
     zh: {
-        title: "像素餐厅",
+        title: "寻味方块",
         play: "开启菜单",
         selectRegion: "菜单",
-        selectDesc: "享受多种美食",
+        selectDesc: "在像素之间，寻回味蕾的纯粹觉醒",
         subTitle: "请点餐",
         served: "已上菜",
         progress: "备菜进度",
@@ -54,7 +55,8 @@ const I18N = {
         map: "菜单",
         next: "下一道菜",
         congrats: "太棒了！你已经品鉴完了餐厅的所有美食！",
-        back: "返回"
+        back: "返回",
+        producer: "制作人：伞伞"
     }
 };
 
@@ -359,9 +361,24 @@ class Piece {
 
 function applyLanguage() {
     const lang = I18N[currentLang];
-    document.getElementById('main-title').innerText = lang.title;
+    const mainTitle = document.getElementById('main-title');
+    const menuTitle = document.getElementById('level-select-title');
+    const subMenuTitle = document.getElementById('sub-menu-title');
+
+    mainTitle.innerText = lang.title;
+
+    // Toggle English styling for all major headers
+    [mainTitle, menuTitle, subMenuTitle].forEach(el => {
+        if (!el) return;
+        if (currentLang === 'en') {
+            el.classList.add('is-en');
+        } else {
+            el.classList.remove('is-en');
+        }
+    });
+
     document.getElementById('playBtn').innerText = lang.play;
-    document.getElementById('level-select-title').innerText = lang.selectRegion;
+    menuTitle.innerText = lang.selectRegion;
     const menuDesc = document.querySelector('.menu-description');
     if (menuDesc) menuDesc.innerText = lang.selectDesc;
 
@@ -372,6 +389,17 @@ function applyLanguage() {
     document.getElementById('toLevelBtn').innerText = lang.map;
     document.getElementById('nextBtn').innerText = lang.next;
     document.getElementById('backToMenu').innerText = lang.back;
+
+    const producerEl = document.getElementById('producer-credit');
+    if (producerEl) {
+        producerEl.innerText = lang.producer;
+        splitTextToSpans(producerEl);
+    }
+
+    // 同时对大标题也应用碎片重构
+    if (mainTitle) {
+        splitTextToSpans(mainTitle);
+    }
 
     document.querySelectorAll('.dish-item').forEach(btn => {
         const region = btn.dataset.region;
@@ -596,6 +624,74 @@ document.querySelectorAll('.flavor-card').forEach(card => {
         showDishes(region);
     });
 });
+
+// 增加轮播图拖拽滚动功能
+const carousel = document.querySelector('.flavor-carousel');
+if (carousel) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    carousel.addEventListener('mousedown', (e) => {
+        isDown = true;
+        carousel.classList.add('active');
+        startX = e.pageX - carousel.offsetLeft;
+        scrollLeft = carousel.scrollLeft;
+        carousel.style.cursor = 'grabbing';
+    });
+
+    carousel.addEventListener('mouseleave', () => {
+        isDown = false;
+        carousel.style.cursor = 'grab';
+    });
+
+    carousel.addEventListener('mouseup', () => {
+        isDown = false;
+        carousel.style.cursor = 'grab';
+    });
+
+    carousel.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - carousel.offsetLeft;
+        const walk = (x - startX) * 2; // 滚动速度
+        carousel.scrollLeft = scrollLeft - walk;
+    });
+
+    // 绑定左右箭头按钮逻辑
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextCarouselBtn');
+
+    if (prevBtn && nextBtn) {
+        const scrollAmount = 380; // 卡片宽度350 + 间距30
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+    }
+}
+
+function splitTextToSpans(element) {
+    const text = element.innerText;
+    element.innerHTML = '';
+    [...text].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.innerText = char === ' ' ? '\u00A0' : char;
+        span.style.display = 'inline-block';
+        span.style.animationDelay = `${Math.random() * 0.5 + i * 0.05}s`;
+
+        // 赋予随机碎片初始方向
+        const rx = (Math.random() - 0.5) * 40;
+        const ry = (Math.random() - 0.5) * 40;
+        span.style.setProperty('--rx', `${rx}px`);
+        span.style.setProperty('--ry', `${ry}px`);
+
+        span.className = 'pixel-fragment';
+        element.appendChild(span);
+    });
+}
 
 document.getElementById('backToCarousel').addEventListener('click', () => {
     dishScreen.classList.add('hidden');

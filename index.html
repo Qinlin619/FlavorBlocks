@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Restaurant | 像素餐厅</title>
+    <title>寻味方块 | Flavor Blocks</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Zpix&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;600&family=Zpix&display=swap"
         rel="stylesheet">
 </head>
 
@@ -21,12 +21,13 @@
             </div>
             <div class="hero-content">
                 <div class="hero-subtitle">FINE PIXEL DINING</div>
-                <h1 id="main-title" class="hero-title">像素餐厅</h1>
+                <h1 id="main-title" class="hero-title">寻味方块</h1>
                 <div class="hero-line"></div>
                 <button id="playBtn" class="play-trigger">
                     <span class="btn-text">OPEN MENU</span>
                     <span class="btn-sub">开启赏味之旅</span>
                 </button>
+                <div id="producer-credit" class="hero-credits">PRODUCER: 伞伞</div>
             </div>
             <div class="hero-bg-accent"></div>
         </div>
@@ -39,50 +40,54 @@
                     <div class="menu-description">Select a regional flavor to start your dining experience.</div>
                 </header>
 
-                <div class="flavor-carousel">
-                    <!-- 亚洲风味卡片 -->
-                    <div class="flavor-card" data-region="asia">
-                        <div class="card-header">
-                            <span class="card-num">01</span>
-                            <h3>ASIA / 亚洲风味</h3>
+                <div class="carousel-wrapper">
+                    <button id="prevBtn" class="nav-btn prev">←</button>
+                    <div class="flavor-carousel">
+                        <!-- 亚洲风味卡片 -->
+                        <div class="flavor-card" data-region="asia">
+                            <div class="card-header">
+                                <span class="card-num">01</span>
+                                <h3>ASIA / 亚洲风味</h3>
+                            </div>
+                            <div class="card-footer">
+                                <span class="explore-text">EXPLORE DISHES</span>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="explore-text">EXPLORE DISHES</span>
-                        </div>
-                    </div>
 
-                    <!-- 欧陆风情卡片 -->
-                    <div class="flavor-card" data-region="europe">
-                        <div class="card-header">
-                            <span class="card-num">02</span>
-                            <h3>EUROPE / 欧陆风情</h3>
+                        <!-- 欧陆风情卡片 -->
+                        <div class="flavor-card" data-region="europe">
+                            <div class="card-header">
+                                <span class="card-num">02</span>
+                                <h3>EUROPE / 欧陆风情</h3>
+                            </div>
+                            <div class="card-footer">
+                                <span class="explore-text">EXPLORE DISHES</span>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="explore-text">EXPLORE DISHES</span>
-                        </div>
-                    </div>
 
-                    <!-- 美洲经典卡片 -->
-                    <div class="flavor-card" data-region="americas">
-                        <div class="card-header">
-                            <span class="card-num">03</span>
-                            <h3>AMERICAS / 美洲经典</h3>
+                        <!-- 美洲经典卡片 -->
+                        <div class="flavor-card" data-region="americas">
+                            <div class="card-header">
+                                <span class="card-num">03</span>
+                                <h3>AMERICAS / 美洲经典</h3>
+                            </div>
+                            <div class="card-footer">
+                                <span class="explore-text">EXPLORE DISHES</span>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="explore-text">EXPLORE DISHES</span>
-                        </div>
-                    </div>
 
-                    <!-- 特调之选卡片 -->
-                    <div class="flavor-card" data-region="others">
-                        <div class="card-header">
-                            <span class="card-num">04</span>
-                            <h3>OTHERS / 特调之选</h3>
-                        </div>
-                        <div class="card-footer">
-                            <span class="explore-text">EXPLORE DISHES</span>
+                        <!-- 特调之选卡片 -->
+                        <div class="flavor-card" data-region="others">
+                            <div class="card-header">
+                                <span class="card-num">04</span>
+                                <h3>OTHERS / 特调之选</h3>
+                            </div>
+                            <div class="card-footer">
+                                <span class="explore-text">EXPLORE DISHES</span>
+                            </div>
                         </div>
                     </div>
+                    <button id="nextCarouselBtn" class="nav-btn next">→</button>
                 </div>
 
                 <button id="backToMenu" class="menu-back-btn">RETURN TO FRONT</button>
@@ -93,16 +98,15 @@
         <div id="dish-screen" class="overlay hidden">
             <div class="menu-container dish-selection-container">
                 <header class="menu-top-header">
-                    <button id="backToCarousel" class="menu-back-btn" style="margin-top: 0; margin-bottom: 2rem;">← BACK
-                        TO MENU</button>
                     <div class="header-titles">
                         <span id="sub-menu-region" class="region-pill">REGION</span>
-                        <h2 id="sub-menu-title" style="font-size: 3.5rem;">SELECT DISH</h2>
+                        <h2 id="sub-menu-title">SELECT DISH</h2>
                     </div>
                 </header>
                 <div id="dish-list" class="dish-list-container">
                     <!-- JS 动态填充 -->
                 </div>
+                <button id="backToCarousel" class="menu-back-btn">← BACK TO MENU</button>
             </div>
         </div>
 
@@ -111,7 +115,7 @@
             <header>
                 <div class="header-left">
                     <button id="homeBtn" class="icon-btn">←</button>
-                    <h1 id="game-ui-title" class="small-title">Pixel Restaurant</h1>
+                    <h1 id="game-ui-title" class="small-title">寻味方块</h1>
                 </div>
                 <div class="stats">
                     <span id="label-progress" class="label">PROGRESS</span>
