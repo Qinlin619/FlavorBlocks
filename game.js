@@ -38,6 +38,7 @@ const I18N = {
         winDesc: "Your order has been served perfectly.",
         map: "MENU",
         next: "NEXT DISH",
+        restart: "RESTART",
         congrats: "Incredible! You've tasted every delicacy in our restaurant!",
         back: "CLOSE",
         producer: "PRODUCER: 伞伞"
@@ -54,6 +55,7 @@ const I18N = {
         winDesc: "滋味归位，请慢用。",
         map: "菜单",
         next: "下一道菜",
+        restart: "重做",
         congrats: "太棒了！你已经品鉴完了餐厅的所有美食！",
         back: "返回",
         producer: "制作人：伞伞"
@@ -119,7 +121,14 @@ const FOOD_LEVELS = {
             ],
             colors: { 1: "#e74c3c", 2: "#ffffff", 3: "#f1c40f", 4: "#34495e", 5: "#ffffff" },
             story: { en: "Midnight comfort in a rich broth, pixelated lines sketch the noodle soup.", zh: "浓郁的汤底中，像素化的线条勾勒出深夜的慰藉。" }
-        }
+        },
+        ...Array.from({ length: 10 }, (_, i) => ({
+            name: { en: `New Asia Dish ${i + 1}`, zh: `亚洲新品 ${i + 1}` },
+            dim: 3,
+            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            colors: { 1: "#f5f5f5" },
+            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
+        }))
     ],
     "europe": [
         {
@@ -151,7 +160,14 @@ const FOOD_LEVELS = {
             ],
             colors: { 1: "#e67e22" },
             story: { en: "The crisp morning of Paris, waking up in layered buttery scent.", zh: "巴黎清晨的酥脆，在层层叠叠的黄油香气中苏醒。" }
-        }
+        },
+        ...Array.from({ length: 10 }, (_, i) => ({
+            name: { en: `New Europe Dish ${i + 1}`, zh: `欧陆新品 ${i + 1}` },
+            dim: 3,
+            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            colors: { 1: "#f5f5f5" },
+            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
+        }))
     ],
     "americas": [
         {
@@ -197,7 +213,14 @@ const FOOD_LEVELS = {
             ],
             colors: { 1: "#ff9ff3", 2: "#feca57" },
             story: { en: "A sweet ring of happiness, glazed with pink dreams.", zh: "一颗圆润的快乐，淋上粉红色的梦幻果酱。" }
-        }
+        },
+        ...Array.from({ length: 10 }, (_, i) => ({
+            name: { en: `New Americas Dish ${i + 1}`, zh: `美洲新品 ${i + 1}` },
+            dim: 3,
+            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            colors: { 1: "#f5f5f5" },
+            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
+        }))
     ],
     "others": [
         {
@@ -232,7 +255,14 @@ const FOOD_LEVELS = {
             ],
             colors: { 1: "#c0392b", 2: "#bdc3c7", 3: "#f1c40f", 4: "#2c3e50" },
             story: { en: "Bubbling red oil, spicy passion from the mist of Chongqing.", zh: "翻滚的红油，是山城迷雾中沸腾的热情。" }
-        }
+        },
+        ...Array.from({ length: 10 }, (_, i) => ({
+            name: { en: `Special Special ${i + 1}`, zh: `特调新品 ${i + 1}` },
+            dim: 3,
+            mask: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+            colors: { 1: "#f5f5f5" },
+            story: { en: "A new creation is brewing...", zh: "一道神秘的新品正在研制中..." }
+        }))
     ]
 };
 
@@ -331,13 +361,20 @@ class Piece {
 
                     const dist = Math.sqrt(Math.pow(this.x - targetXForThis, 2) + Math.pow(this.y - targetYForThis, 2));
                     if (dist < 30) {
-                        // 互换目标像素位置信息
-                        const tempX = p.x;
-                        const tempY = p.y;
-                        p.x = op.x;
-                        p.y = op.y;
-                        op.x = tempX;
-                        op.y = tempY;
+                        const oldPX = p.x;
+                        const oldPY = p.y;
+                        const oldOpX = op.x;
+                        const oldOpY = op.y;
+
+                        // 互换目标像素位置信息 (逻辑坐标)
+                        p.x = oldOpX;
+                        p.y = oldOpY;
+                        op.x = oldPX;
+                        op.y = oldPY;
+
+                        // 同时补偿 other 的绘制坐标，确保其在屏幕上的物理位置保持不变，防止“瞬移”
+                        other.x += (oldOpX - oldPX) * PIXEL_SIZE;
+                        other.y += (oldOpY - oldPY) * PIXEL_SIZE;
 
                         this.x = this.targetX;
                         this.y = this.targetY;
@@ -387,8 +424,11 @@ function applyLanguage() {
     document.getElementById('win-title').innerText = lang.winTitle;
     document.getElementById('win-desc').innerText = lang.winDesc;
     document.getElementById('toLevelBtn').innerText = lang.map;
+    document.getElementById('restartWinBtn').innerText = lang.restart;
     document.getElementById('nextBtn').innerText = lang.next;
     document.getElementById('backToMenu').innerText = lang.back;
+    const backToCarousel = document.getElementById('backToCarousel');
+    if (backToCarousel) backToCarousel.innerText = lang.back;
 
     const producerEl = document.getElementById('producer-credit');
     if (producerEl) {
@@ -419,6 +459,8 @@ function applyLanguage() {
 }
 
 function initGameFromData(data, region, idx) {
+    isVictoryTriggered = false;
+    winOverlay.classList.add('hidden');
     currentLevelData = data;
     currentRegion = region;
     currentLevelIdx = idx;
@@ -492,7 +534,7 @@ function showDishes(region) {
 
     document.getElementById('sub-menu-region').innerText = regionNames[region][currentLang];
     document.getElementById('sub-menu-title').innerText = I18N[currentLang].subTitle;
-    document.getElementById('backToCarousel').innerText = `← ${I18N[currentLang].back}`;
+    document.getElementById('backToCarousel').innerText = I18N[currentLang].back;
 
     dishList.innerHTML = '';
 
@@ -521,6 +563,35 @@ function showDishes(region) {
     dishScreen.classList.remove('hidden');
 }
 
+function drawWinPreview() {
+    const previewCanvas = document.getElementById('win-preview-canvas');
+    const pCtx = previewCanvas.getContext('2d');
+    const mask = currentLevelData.mask;
+    const rows = mask.length;
+    const cols = mask[0].length;
+
+    const previewSize = 200;
+    const padding = 20;
+    const cellSize = Math.min((previewSize - padding * 2) / cols, (previewSize - padding * 2) / rows);
+
+    pCtx.clearRect(0, 0, previewSize, previewSize);
+
+    const offsetX = (previewSize - cols * cellSize) / 2;
+    const offsetY = (previewSize - rows * cellSize) / 2;
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const colorId = mask[y][x];
+            if (colorId !== 0) {
+                pCtx.fillStyle = currentLevelData.colors[colorId] || "#000";
+                pCtx.fillRect(offsetX + x * cellSize, offsetY + y * cellSize, cellSize - 0.5, cellSize - 0.5);
+            }
+        }
+    }
+}
+
+let isVictoryTriggered = false;
+
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pieces.forEach(p => p.drawTarget(ctx));
@@ -528,7 +599,9 @@ function render() {
     const lockedCount = pieces.filter(p => p.isLocked).length;
     const progress = Math.round((lockedCount / pieces.length) * 100);
     progressEl.innerText = `${progress}%`;
-    if (lockedCount === pieces.length && pieces.length > 0) {
+
+    if (lockedCount === pieces.length && pieces.length > 0 && !isVictoryTriggered) {
+        isVictoryTriggered = true;
         const key = `${currentRegion}_${currentLevelIdx}`;
         if (!completedLevels[key]) {
             completedLevels[key] = true;
@@ -536,11 +609,9 @@ function render() {
             applyLanguage(); // 更新菜单上的印章
         }
         setTimeout(() => {
-            const winIcon = document.querySelector('.win-icon');
-            const icons = ["🍳", "🍱", "🍕", "🍔", "🍜", "🍰", "🍵"];
-            winIcon.innerText = icons[Math.floor(Math.random() * icons.length)];
+            drawWinPreview();
             winOverlay.classList.remove('hidden');
-        }, 500);
+        }, 400);
     }
 }
 
@@ -693,6 +764,11 @@ function splitTextToSpans(element) {
     });
 }
 
+document.getElementById('backToMenu').addEventListener('click', () => {
+    levelScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+});
+
 document.getElementById('backToCarousel').addEventListener('click', () => {
     dishScreen.classList.add('hidden');
     levelScreen.classList.remove('hidden');
@@ -703,21 +779,19 @@ document.getElementById('homeBtn').addEventListener('click', () => {
     startScreen.classList.remove('hidden');
 });
 
-document.getElementById('backToMenu').addEventListener('click', () => {
-    levelScreen.classList.add('hidden');
-    startScreen.classList.remove('hidden');
+document.getElementById('restartWinBtn').addEventListener('click', () => {
+    winOverlay.classList.add('hidden');
+    initGameFromData(currentLevelData, currentRegion, currentLevelIdx);
 });
 
 document.getElementById('toLevelBtn').addEventListener('click', () => {
     winOverlay.classList.add('hidden');
     gameUI.classList.add('hidden');
-    levelScreen.classList.remove('hidden');
+    dishScreen.classList.remove('hidden'); // Changed from levelScreen to dishScreen
 });
 
 document.getElementById('nextBtn').addEventListener('click', () => {
     winOverlay.classList.add('hidden');
-
-    // 逻辑：寻找下一关
     const regions = Object.keys(FOOD_LEVELS);
     let nextIdx = currentLevelIdx + 1;
     let nextRegion = currentRegion;

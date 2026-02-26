@@ -140,11 +140,13 @@
         <!-- 获胜弹窗 -->
         <div id="win-overlay" class="overlay hidden">
             <div class="win-content">
-                <div class="win-icon">✔</div>
-                <h2 id="win-title">COMPLETED</h2>
+                <canvas id="win-preview-canvas" width="200" height="200"
+                    style="margin-bottom: 2rem; image-rendering: pixelated;"></canvas>
+                <h2 id="win-title">DISH READY!</h2>
                 <p id="win-desc">Everything in its right place.</p>
                 <div class="win-actions">
-                    <button id="toLevelBtn" class="premium-btn">MAP</button>
+                    <button id="toLevelBtn" class="premium-btn">MENU</button>
+                    <button id="restartWinBtn" class="premium-btn">RESTART</button>
                     <button id="nextBtn" class="premium-btn secondary">NEXT</button>
                 </div>
             </div>
