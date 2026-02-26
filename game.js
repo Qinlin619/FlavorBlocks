@@ -1,5 +1,5 @@
 /**
- * Pixel Slice - 核心逻辑 (环球美食版)
+ * Flavor Blocks - 核心逻辑 (v1.0.1)
  */
 
 const canvas = document.getElementById('gameCanvas');
