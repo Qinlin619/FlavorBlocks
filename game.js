@@ -35,7 +35,7 @@ const I18N = {
         served: "SERVED",
         progress: "PREPARATION",
         winTitle: "DISH READY!",
-        winDesc: "Your order has been served perfectly.",
+        winDesc: "Enjoy your meal!",
         map: "MENU",
         next: "NEXT DISH",
         restart: "RESTART",
@@ -52,7 +52,7 @@ const I18N = {
         served: "已上菜",
         progress: "备菜进度",
         winTitle: "菜已经准备好了！",
-        winDesc: "滋味归位，请慢用。",
+        winDesc: "客官请慢用~",
         map: "菜单",
         next: "下一道菜",
         restart: "重做",
@@ -67,9 +67,18 @@ const FOOD_LEVELS = {
     "asia": [
         {
             name: { en: "Onigiri", zh: "饭团" },
-            dim: 4,
-            mask: [[0, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 1], [0, 2, 2, 0]],
-            colors: { 1: "#ffffff", 2: "#333333" },
+            dim: 8,
+            mask: [
+                [0, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 1, 3, 1, 1, 3, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 2, 2, 2, 2, 1, 1],
+                [1, 3, 2, 2, 2, 2, 3, 1],
+                [0, 1, 2, 2, 2, 2, 1, 0],
+                [0, 0, 2, 2, 2, 2, 0, 0]
+            ],
+            colors: { 1: "#fdf6e3", 2: "#4a445d", 3: "#d0d0e1" },
             story: { en: "A simple classic. Pure rice, pure heart.", zh: "一颗简单的饭团，是米饭最纯粹的仪式感。" }
         },
         {
@@ -88,77 +97,85 @@ const FOOD_LEVELS = {
         },
         {
             name: { en: "Ramen", zh: "日本拉面" },
-            dim: 8,
+            dim: 10,
             mask: [
-                [0, 0, 4, 4, 4, 4, 0, 0],
-                [0, 3, 3, 3, 3, 3, 3, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 2, 2, 2, 2, 2, 2, 1],
-                [1, 2, 2, 5, 2, 2, 2, 1],
-                [1, 2, 2, 2, 2, 2, 2, 1],
-                [0, 1, 2, 2, 2, 2, 1, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0]
+                [0, 0, 0, 0, 4, 4, 4, 0, 0, 0],
+                [0, 3, 3, 2, 4, 4, 4, 0, 0, 0],
+                [3, 7, 3, 3, 3, 2, 5, 5, 0, 0],
+                [0, 3, 3, 7, 3, 2, 5, 6, 5, 0],
+                [2, 2, 2, 3, 3, 2, 2, 5, 5, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0]
             ],
-            colors: { 1: "#e74c3c", 2: "#ffffff", 3: "#f1c40f", 4: "#2c3e50", 5: "#ffeb3b" },
+            colors: { 1: "#cc4b43", 2: "#fac06c", 3: "#f4c0c1", 4: "#7e8a61", 5: "#fdf6e3", 6: "#f7b045", 7: "#e38685" },
             story: { en: "A warm bowl defined by its rich, pixelated broth.", zh: "一碗骨汤，足以慰藉像素世界的风尘。" }
         },
         {
-            name: { en: "Sushi Platter", zh: "寿司拼盘" },
-            dim: 10,
+            name: { en: "Sushi Bento", zh: "寿司便当" },
+            dim: 18,
             mask: [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 0, 0, 2, 2, 0, 0, 0],
-                [1, 1, 1, 1, 2, 2, 2, 2, 0, 0],
-                [0, 3, 3, 0, 0, 4, 4, 0, 0, 0],
-                [3, 3, 3, 3, 4, 4, 4, 4, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 0, 0, 1, 1, 0, 0, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-                [0, 2, 2, 0, 0, 2, 2, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                [1, 3, 3, 4, 3, 3, 3, 3, 1, 2, 5, 5, 2, 5, 5, 2, 1, 12],
+                [1, 3, 3, 3, 3, 3, 4, 3, 1, 5, 5, 6, 2, 5, 6, 5, 1, 12],
+                [1, 4, 3, 3, 3, 3, 3, 3, 1, 5, 6, 5, 5, 6, 5, 5, 1, 12],
+                [1, 3, 3, 3, 4, 3, 3, 3, 1, 5, 5, 6, 5, 5, 6, 5, 1, 12],
+                [1, 3, 3, 3, 3, 3, 3, 3, 1, 5, 6, 5, 2, 6, 5, 5, 1, 12],
+                [1, 3, 4, 3, 3, 3, 4, 3, 1, 5, 5, 5, 2, 5, 5, 5, 1, 12],
+                [1, 3, 3, 3, 3, 3, 3, 3, 1, 2, 5, 5, 2, 5, 5, 2, 1, 12],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 12],
+                [1, 2, 7, 7, 2, 7, 7, 2, 1, 2, 9, 9, 9, 2, 2, 2, 1, 12],
+                [1, 2, 8, 8, 2, 8, 8, 2, 1, 9, 10, 10, 9, 2, 2, 2, 1, 12],
+                [1, 2, 7, 8, 2, 7, 8, 2, 1, 9, 10, 11, 10, 9, 9, 2, 1, 12],
+                [1, 2, 8, 7, 2, 8, 7, 2, 1, 2, 9, 10, 10, 9, 2, 2, 1, 12],
+                [1, 2, 7, 8, 2, 7, 8, 2, 1, 2, 9, 10, 11, 10, 9, 2, 1, 12],
+                [1, 2, 7, 7, 2, 7, 7, 2, 1, 2, 9, 10, 10, 9, 2, 2, 1, 12],
+                [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 9, 9, 9, 2, 2, 1, 12],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 12],
+                [0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0]
             ],
-            colors: { 1: "#ffffff", 2: "#ff4757", 3: "#2ecc71", 4: "#f1c40f" },
-            story: { en: "Diversity on a wooden plate, each piece a small art.", zh: "指尖的艺术，在方寸之间变幻出万千风味。" }
-        },
-        {
-            name: { en: "Bento Box", zh: "便当盒" },
-            dim: 12,
-            mask: [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
-                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
-                [1, 2, 2, 2, 2, 1, 3, 3, 3, 3, 3, 1],
-                [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 1],
-                [1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5, 1],
-                [1, 4, 4, 4, 1, 5, 5, 5, 5, 5, 5, 1],
-                [1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 1],
-                [1, 6, 6, 6, 1, 5, 5, 5, 5, 5, 5, 1],
-                [1, 6, 6, 6, 1, 5, 5, 5, 5, 5, 5, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            ],
-            colors: { 1: "#3e2723", 2: "#ffffff", 3: "#ffc107", 4: "#ff5252", 5: "#4caf50", 6: "#9e9e9e" },
-            story: { en: "A complete world packed inside a neat grid.", zh: "小小的格子里，装着大大的惊喜。" }
+            colors: { 1: "#e05345", 2: "#2d2e30", 3: "#f6f9f6", 4: "#d6e4df", 5: "#c08154", 6: "#a8714b", 7: "#ee8839", 8: "#d16a28", 9: "#83cc66", 10: "#a1e389", 11: "#cbe2a9", 12: "#9e382d" },
+            story: { en: "A complete world packed inside a neat grid.", zh: "小小的格子里，装配着整整齐齐的美味。" }
         },
         {
             name: { en: "Xiao Long Bao", zh: "小笼包" },
-            dim: 13,
-            mask: Array(13).fill(0).map((_, y) => Array(13).fill(0).map((_, x) => (Math.sqrt((x - 6) ** 2 + (y - 7) ** 2) < 5 ? 1 : 0))),
-            colors: { 1: "#fefefe", 2: "#e0e0e0" },
-            story: { en: "Thins skin, rich soup, a burst of heat and flavor.", zh: "薄皮大馅，一口爆汁。" }
+            dim: 6,
+            mask: [
+                [0, 0, 1, 1, 0, 0],
+                [0, 1, 1, 1, 2, 0],
+                [1, 1, 1, 1, 1, 2],
+                [1, 1, 1, 1, 1, 2],
+                [1, 1, 1, 1, 1, 2],
+                [0, 0, 0, 0, 0, 0]
+            ],
+            colors: { 1: "#fdf6e3", 2: "#e0c797" },
+            story: { en: "Thin skin, rich soup, a burst of heat and flavor.", zh: "薄皮大馅，一口爆汁。" }
         },
         {
             name: { en: "Bibimbap", zh: "石锅拌饭" },
-            dim: 15,
-            mask: Array(15).fill(0).map((_, y) => Array(15).fill(0).map((_, x) => (y > 10 && Math.abs(x - 7) < 6 ? 2 : (Math.sqrt((x - 7) ** 2 + (y - 6) ** 2) < 6 ? 1 : 0)))),
-            colors: { 1: "#ffffff", 2: "#424242", 3: "#ff5722", 4: "#4caf50" },
+            dim: 10,
+            mask: [
+                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 2, 2, 3, 3, 3, 4, 1, 0],
+                [1, 2, 2, 2, 3, 3, 4, 4, 4, 1],
+                [1, 7, 2, 8, 8, 8, 8, 4, 4, 1],
+                [1, 7, 7, 8, 9, 9, 8, 5, 4, 1],
+                [1, 7, 7, 8, 9, 9, 8, 5, 5, 1],
+                [1, 7, 7, 8, 8, 8, 8, 5, 5, 1],
+                [1, 7, 6, 6, 6, 6, 5, 5, 5, 1],
+                [0, 1, 6, 6, 6, 6, 6, 5, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
+            ],
+            colors: { 1: "#5c3a21", 2: "#558b3e", 3: "#d73c24", 4: "#cfa588", 5: "#e46b2d", 6: "#a8cb71", 7: "#e5cc8a", 8: "#fdf6e3", 9: "#f3b640" },
             story: { en: "Colorful ingredients mixing into a rhythmic sizzle.", zh: "五彩斑斓的食材，在石锅里热烈起舞。" }
         },
         {
             name: { en: "Dim Sum", zh: "广式点心" },
             dim: 16,
             mask: Array(16).fill(0).map((_, y) => 1), // Placeholder logic for complexity
-            colors: { 1: "#f5f5f5" },
+            colors: { 1: "#fdf6e3" },
             story: { en: "The morning tea culture, thousands of flavors in small steamers.", zh: "一盅两件，叹茶人生。" }
         },
         {
@@ -223,7 +240,7 @@ const FOOD_LEVELS = {
             name: { en: "Afternoon Tea", zh: "英式下午茶" },
             dim: 14,
             mask: Array(14).fill(0).map((_, y) => 1),
-            colors: { 1: "#fdfdfd" },
+            colors: { 1: "#fdf6e3" },
             story: { en: "Elegance on a three-tier stand, clinking of silver.", zh: "优雅的三层架，是午后最闲适的仪式。" }
         },
         {
@@ -237,14 +254,14 @@ const FOOD_LEVELS = {
             name: { en: "Black Forest", zh: "黑森林蛋糕" },
             dim: 18,
             mask: Array(18).fill(0).map((_, y) => 1),
-            colors: { 1: "#212121", 2: "#ffffff", 3: "#d32f2f" },
+            colors: { 1: "#212121", 2: "#fdf6e3", 3: "#d32f2f" },
             story: { en: "Chocolate, cream, and a hint of cherry spirits.", zh: "巧克力与樱桃的浪漫邂逅。" }
         },
         {
             name: { en: "Greek Salad", zh: "希腊沙拉" },
             dim: 20,
             mask: Array(20).fill(0).map((_, y) => 1),
-            colors: { 1: "#4caf50", 2: "#ffffff", 3: "#212121" },
+            colors: { 1: "#4caf50", 2: "#fdf6e3", 3: "#212121" },
             story: { en: "Fresh, healthy, the blue of the Mediterranean.", zh: "地中海的和风，伴着橄榄与奶酪。" }
         }
     ],
@@ -302,7 +319,7 @@ const FOOD_LEVELS = {
             name: { en: "Ceviche", zh: "秘鲁生鱼片" },
             dim: 16,
             mask: Array(16).fill(0).map((_, y) => 1),
-            colors: { 1: "#ffffff", 2: "#81d4fa" },
+            colors: { 1: "#fdf6e3", 2: "#81d4fa" },
             story: { en: "Acidic freshness from the ancient Andes.", zh: "柠檬浸渍的鲜甜。" }
         },
         {
@@ -425,14 +442,14 @@ const FOOD_LEVELS = {
             name: { en: "Fairy Bread", zh: "仙女面包" },
             dim: 11,
             mask: Array(11).fill(0).map((_, y) => 1),
-            colors: { 1: "#ffffff", 2: "#ff7043", 3: "#4caf50" },
+            colors: { 1: "#fdf6e3", 2: "#ff7043", 3: "#4caf50" },
             story: { en: "Butter, sprinkles, and childhood memories.", zh: "彩色糖珠洒下的童年幻境。" }
         },
         {
             name: { en: "Lamington", zh: "拉明顿蛋糕" },
             dim: 13,
             mask: Array(13).fill(0).map((_, y) => 1),
-            colors: { 1: "#4e342e", 2: "#ffffff" },
+            colors: { 1: "#4e342e", 2: "#fdf6e3" },
             story: { en: "The National Cake, rolled in coconut snow.", zh: "裹着椰丝白雪的巧克力方块。" }
         },
         {
@@ -446,14 +463,14 @@ const FOOD_LEVELS = {
             name: { en: "Flat White", zh: "平白咖啡" },
             dim: 16,
             mask: Array(16).fill(0).map((_, y) => 1),
-            colors: { 1: "#6d4c41", 2: "#ffffff" },
+            colors: { 1: "#6d4c41", 2: "#fdf6e3" },
             story: { en: "Silky microfoam, the Oceania caffeine standard.", zh: "天鹅绒般的奶泡，大洋洲的清晨之光。" }
         },
         {
             name: { en: "Pavlova", zh: "帕夫洛娃蛋糕" },
             dim: 18,
             mask: Array(18).fill(0).map((_, y) => 1),
-            colors: { 1: "#ffffff", 2: "#ff4081" },
+            colors: { 1: "#fdf6e3", 2: "#ff4081" },
             story: { en: "As clouds as a ballerina's dress.", zh: "如天鹅湖般的轻盈与纯洁。" }
         },
         {
@@ -668,7 +685,11 @@ function applyLanguage() {
 
     document.getElementById('game-ui-title').innerText = lang.title;
     document.getElementById('label-progress').innerText = lang.progress;
-    document.getElementById('win-title').innerText = lang.winTitle;
+    if (isVictoryTriggered && currentLevelData) {
+        document.getElementById('win-title').innerText = currentLevelData.name[currentLang];
+    } else {
+        document.getElementById('win-title').innerText = lang.winTitle;
+    }
     document.getElementById('win-desc').innerText = lang.winDesc;
     const mapLabel = document.querySelector('#toLevelBtn .win-btn-label');
     if (mapLabel) mapLabel.innerText = lang.map;
@@ -884,15 +905,10 @@ function drawWinPreview() {
 
                 const px = Math.floor(offsetX + (x - minX) * cellSize);
                 const py = Math.floor(offsetY + (y - minY) * cellSize);
-                const pw = Math.ceil(cellSize) + 1;
-                const ph = Math.ceil(cellSize) + 1;
+                const nextPx = Math.floor(offsetX + (x - minX + 1) * cellSize);
+                const nextPy = Math.floor(offsetY + (y - minY + 1) * cellSize);
 
-                pCtx.fillRect(px, py, pw, ph);
-
-                // 极淡的边框
-                pCtx.strokeStyle = "rgba(0,0,0,0.06)";
-                pCtx.lineWidth = 1;
-                pCtx.strokeRect(px, py, pw, ph);
+                pCtx.fillRect(px, py, nextPx - px, nextPy - py);
             }
         }
     }
@@ -926,6 +942,7 @@ function render() {
         }
         setTimeout(() => {
             drawWinPreview();
+            document.getElementById('win-title').innerText = currentLevelData.name[currentLang];
             winOverlay.classList.remove('hidden');
         }, 400);
     }
