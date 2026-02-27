@@ -742,7 +742,7 @@ function initGameFromData(data, region, idx) {
     currentRegion = region;
     currentLevelIdx = idx;
     const dim = data.dim;
-    const maxPuzzleSize = Math.min(window.innerWidth * 0.5, 450);
+    const maxPuzzleSize = Math.min(window.innerWidth * 0.8, 450);
     PIXEL_SIZE = Math.min(50, maxPuzzleSize / dim);
 
     const mask = data.mask;
