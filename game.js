@@ -67,16 +67,14 @@ const FOOD_LEVELS = {
     "asia": [
         {
             name: { en: "Onigiri", zh: "饭团" },
-            dim: 8,
+            dim: 6,
             mask: [
-                [0, 0, 0, 1, 1, 0, 0, 0],
-                [0, 0, 1, 1, 1, 1, 0, 0],
-                [0, 1, 3, 1, 1, 3, 1, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 2, 2, 2, 2, 1, 1],
-                [1, 3, 2, 2, 2, 2, 3, 1],
-                [0, 1, 2, 2, 2, 2, 1, 0],
-                [0, 0, 2, 2, 2, 2, 0, 0]
+                [0, 0, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1],
+                [1, 2, 2, 2, 2, 1],
+                [1, 2, 2, 2, 2, 1],
+                [0, 2, 2, 2, 2, 0]
             ],
             colors: { 1: "#fdf6e3", 2: "#4a445d", 3: "#d0d0e1" },
             story: { en: "A simple classic. Pure rice, pure heart.", zh: "一颗简单的饭团，是米饭最纯粹的仪式感。" }
@@ -97,44 +95,30 @@ const FOOD_LEVELS = {
         },
         {
             name: { en: "Ramen", zh: "日本拉面" },
-            dim: 10,
+            dim: 8,
             mask: [
-                [0, 0, 0, 0, 4, 4, 4, 0, 0, 0],
-                [0, 3, 3, 2, 4, 4, 4, 0, 0, 0],
-                [3, 7, 3, 3, 3, 2, 5, 5, 0, 0],
-                [0, 3, 3, 7, 3, 2, 5, 6, 5, 0],
-                [2, 2, 2, 3, 3, 2, 2, 5, 5, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0]
+                [0, 3, 2, 4, 4, 3, 0, 0],
+                [3, 7, 3, 2, 5, 5, 5, 0],
+                [0, 3, 7, 2, 5, 6, 5, 0],
+                [2, 2, 3, 2, 5, 5, 5, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0]
             ],
             colors: { 1: "#cc4b43", 2: "#fac06c", 3: "#f4c0c1", 4: "#7e8a61", 5: "#fdf6e3", 6: "#f7b045", 7: "#e38685" },
             story: { en: "A warm bowl defined by its rich, pixelated broth.", zh: "一碗骨汤，足以慰藉像素世界的风尘。" }
         },
         {
             name: { en: "Sushi Bento", zh: "寿司便当" },
-            dim: 18,
+            dim: 6,
             mask: [
-                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-                [1, 3, 3, 4, 3, 3, 3, 3, 1, 2, 5, 5, 2, 5, 5, 2, 1, 12],
-                [1, 3, 3, 3, 3, 3, 4, 3, 1, 5, 5, 6, 2, 5, 6, 5, 1, 12],
-                [1, 4, 3, 3, 3, 3, 3, 3, 1, 5, 6, 5, 5, 6, 5, 5, 1, 12],
-                [1, 3, 3, 3, 4, 3, 3, 3, 1, 5, 5, 6, 5, 5, 6, 5, 1, 12],
-                [1, 3, 3, 3, 3, 3, 3, 3, 1, 5, 6, 5, 2, 6, 5, 5, 1, 12],
-                [1, 3, 4, 3, 3, 3, 4, 3, 1, 5, 5, 5, 2, 5, 5, 5, 1, 12],
-                [1, 3, 3, 3, 3, 3, 3, 3, 1, 2, 5, 5, 2, 5, 5, 2, 1, 12],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 12],
-                [1, 2, 7, 7, 2, 7, 7, 2, 1, 2, 9, 9, 9, 2, 2, 2, 1, 12],
-                [1, 2, 8, 8, 2, 8, 8, 2, 1, 9, 10, 10, 9, 2, 2, 2, 1, 12],
-                [1, 2, 7, 8, 2, 7, 8, 2, 1, 9, 10, 11, 10, 9, 9, 2, 1, 12],
-                [1, 2, 8, 7, 2, 8, 7, 2, 1, 2, 9, 10, 10, 9, 2, 2, 1, 12],
-                [1, 2, 7, 8, 2, 7, 8, 2, 1, 2, 9, 10, 11, 10, 9, 2, 1, 12],
-                [1, 2, 7, 7, 2, 7, 7, 2, 1, 2, 9, 10, 10, 9, 2, 2, 1, 12],
-                [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 9, 9, 9, 2, 2, 1, 12],
-                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 12],
-                [0, 0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 0]
+                [1, 1, 1, 1, 1, 1],
+                [1, 3, 3, 1, 5, 1],
+                [1, 3, 3, 1, 5, 1],
+                [1, 1, 1, 1, 1, 1],
+                [1, 7, 7, 1, 9, 1],
+                [1, 1, 1, 1, 1, 1]
             ],
             colors: { 1: "#e05345", 2: "#2d2e30", 3: "#f6f9f6", 4: "#d6e4df", 5: "#c08154", 6: "#a8714b", 7: "#ee8839", 8: "#d16a28", 9: "#83cc66", 10: "#a1e389", 11: "#cbe2a9", 12: "#9e382d" },
             story: { en: "A complete world packed inside a neat grid.", zh: "小小的格子里，装配着整整齐齐的美味。" }
@@ -155,18 +139,16 @@ const FOOD_LEVELS = {
         },
         {
             name: { en: "Bibimbap", zh: "石锅拌饭" },
-            dim: 10,
+            dim: 8,
             mask: [
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-                [0, 1, 2, 2, 3, 3, 3, 4, 1, 0],
-                [1, 2, 2, 2, 3, 3, 4, 4, 4, 1],
-                [1, 7, 2, 8, 8, 8, 8, 4, 4, 1],
-                [1, 7, 7, 8, 9, 9, 8, 5, 4, 1],
-                [1, 7, 7, 8, 9, 9, 8, 5, 5, 1],
-                [1, 7, 7, 8, 8, 8, 8, 5, 5, 1],
-                [1, 7, 6, 6, 6, 6, 5, 5, 5, 1],
-                [0, 1, 6, 6, 6, 6, 6, 5, 1, 0],
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [1, 2, 2, 3, 3, 4, 4, 1],
+                [1, 2, 8, 8, 8, 8, 4, 1],
+                [1, 7, 8, 9, 9, 8, 5, 1],
+                [1, 7, 8, 9, 9, 8, 5, 1],
+                [1, 7, 8, 8, 8, 8, 5, 1],
+                [1, 6, 6, 6, 6, 6, 5, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0]
             ],
             colors: { 1: "#5c3a21", 2: "#558b3e", 3: "#d73c24", 4: "#cfa588", 5: "#e46b2d", 6: "#a8cb71", 7: "#e5cc8a", 8: "#fdf6e3", 9: "#f3b640" },
             story: { en: "Colorful ingredients mixing into a rhythmic sizzle.", zh: "五彩斑斓的食材，在石锅里热烈起舞。" }
@@ -760,7 +742,8 @@ function initGameFromData(data, region, idx) {
     currentRegion = region;
     currentLevelIdx = idx;
     const dim = data.dim;
-    PIXEL_SIZE = Math.min(60, 450 / dim);
+    const maxPuzzleSize = Math.min(window.innerWidth * 0.5, 450);
+    PIXEL_SIZE = Math.min(50, maxPuzzleSize / dim);
 
     const mask = data.mask;
     const unassignedByColor = {};
@@ -1091,12 +1074,16 @@ if (carousel) {
     let isDown = false;
     let startX;
     let scrollLeft;
+    let startY;
+    let scrollTop;
 
     carousel.addEventListener('mousedown', (e) => {
         isDown = true;
         carousel.classList.add('active');
         startX = e.pageX - carousel.offsetLeft;
+        startY = e.pageY - carousel.offsetTop;
         scrollLeft = carousel.scrollLeft;
+        scrollTop = carousel.scrollTop;
         carousel.style.cursor = 'grabbing';
     });
 
@@ -1114,9 +1101,59 @@ if (carousel) {
         if (!isDown) return;
         e.preventDefault();
         const x = e.pageX - carousel.offsetLeft;
-        const walk = (x - startX) * 2; // 滚动速度
-        carousel.scrollLeft = scrollLeft - walk;
+        const y = e.pageY - carousel.offsetTop;
+        const walkX = (x - startX) * 2;
+        const walkY = (y - startY) * 2;
+        carousel.scrollLeft = scrollLeft - walkX;
+        carousel.scrollTop = scrollTop - walkY;
     });
+
+    // 为移动设备触摸增加支持
+    carousel.addEventListener('touchstart', (e) => {
+        isDown = true;
+        carousel.classList.add('active');
+        const touch = e.touches[0];
+        startX = touch.pageX - carousel.offsetLeft;
+        startY = touch.pageY - carousel.offsetTop;
+        scrollLeft = carousel.scrollLeft;
+        scrollTop = carousel.scrollTop;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', () => {
+        isDown = false;
+    });
+
+    carousel.addEventListener('touchcancel', () => {
+        isDown = false;
+    });
+
+    carousel.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        if (window.innerWidth <= 768) {
+            // 对手机端，原生滚动其实已经由 overflow-y 特性支持，
+            // 但如果因为某种环境拦截了，我们可以主动根据 touch 赋滚动值。
+            // 不进行 preventDefault()，保证自然滑动感受。
+            const touch = e.touches[0];
+            const y = touch.pageY - carousel.offsetTop;
+            const walkY = (y - startY) * 1.5;
+            carousel.scrollTop = scrollTop - walkY;
+        } else {
+            // 电脑横向触摸或兼容横向
+            const touch = e.touches[0];
+            const x = touch.pageX - carousel.offsetLeft;
+            const walkX = (x - startX) * 1.5;
+            carousel.scrollLeft = scrollLeft - walkX;
+        }
+    }, { passive: true });
+
+    carousel.addEventListener('wheel', (e) => {
+        if (window.innerWidth > 768) {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                carousel.scrollLeft += e.deltaY;
+            }
+        }
+    }, { passive: false });
 
     // 绑定左右箭头按钮逻辑
     const prevBtn = document.getElementById('prevBtn');
