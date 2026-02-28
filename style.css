@@ -705,9 +705,7 @@ canvas:active {
 }
 
 .lang-switch {
-    position: absolute;
-    top: 3rem;
-    right: 3rem;
+    position: relative;
     z-index: 3000;
 }
 

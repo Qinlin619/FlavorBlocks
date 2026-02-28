@@ -24,6 +24,8 @@ let draggingPiece = null;
 let offset = { x: 0, y: 0 };
 let currentLang = 'zh'; // Default to zh as requested
 let completedLevels = JSON.parse(localStorage.getItem('pixel_restaurant_completed') || '{}');
+let currentHintAlpha = 0;
+let hintAnimationFrame = null;
 
 const I18N = {
     en: {
@@ -39,6 +41,8 @@ const I18N = {
         map: "MENU",
         next: "NEXT DISH",
         restart: "RESTART",
+        shuffle: "SHUFFLE",
+        hint: "HINT",
         congrats: "Incredible! You've tasted every delicacy in our restaurant!",
         back: "CLOSE",
         producer: "PRODUCER: Umbrella"
@@ -56,6 +60,8 @@ const I18N = {
         map: "菜单",
         next: "下一道菜",
         restart: "重做",
+        shuffle: "重新打乱",
+        hint: "来点提示",
         congrats: "太棒了！你已经品鉴完了餐厅的所有美食！",
         back: "返回",
         producer: "制作人：伞伞"
@@ -1296,6 +1302,12 @@ function applyLanguage() {
         splitTextToSpans(mainTitle);
     }
 
+    const gameRestartBtn = document.getElementById('restartBtn');
+    if (gameRestartBtn) gameRestartBtn.innerText = lang.shuffle;
+
+    const realHintBtn = document.getElementById('realHintBtn');
+    if (realHintBtn) realHintBtn.innerText = lang.hint;
+
     document.querySelectorAll('.dish-item').forEach(btn => {
         const region = btn.dataset.region;
         const levelIdx = parseInt(btn.dataset.level || 0);
@@ -1604,6 +1616,24 @@ function render() {
 
     // 1. 绘制目标底槽
     pieces.forEach(p => p.drawTarget(ctx));
+
+    // 1.5. 绘制提示层
+    if (currentHintAlpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = currentHintAlpha;
+        pieces.forEach(p => {
+            ctx.fillStyle = currentLevelData.colors[p.colorId] || "#000";
+            p.pixels.forEach(pixel => {
+                ctx.fillRect(
+                    p.targetX + pixel.x * PIXEL_SIZE,
+                    p.targetY + pixel.y * PIXEL_SIZE,
+                    PIXEL_SIZE - 1,
+                    PIXEL_SIZE - 1
+                );
+            });
+        });
+        ctx.restore();
+    }
 
     // 2. 绘制已锁定的碎片（作为背景底层）
     pieces.filter(p => p.isLocked).forEach(p => p.draw(ctx));
@@ -1944,8 +1974,28 @@ document.getElementById('nextBtn').addEventListener('click', () => {
     initGameFromData(nextLevelData, nextRegion, nextIdx);
 });
 
-document.getElementById('hintBtn').addEventListener('click', () => {
+document.getElementById('restartBtn').addEventListener('click', () => {
     initGameFromData(currentLevelData, currentRegion, currentLevelIdx);
+});
+
+document.getElementById('realHintBtn').addEventListener('click', () => {
+    currentHintAlpha = 0.5;
+    if (hintAnimationFrame) cancelAnimationFrame(hintAnimationFrame);
+
+    function fadeHint() {
+        if (currentHintAlpha <= 0) {
+            currentHintAlpha = 0;
+            render();
+            return;
+        }
+        currentHintAlpha -= 0.003;  // 放慢消失速度 (之前是 0.005)
+        if (currentHintAlpha < 0) currentHintAlpha = 0;
+        render();
+        if (currentHintAlpha > 0) {
+            hintAnimationFrame = requestAnimationFrame(fadeHint);
+        }
+    }
+    fadeHint();
 });
 
 window.addEventListener('resize', () => {

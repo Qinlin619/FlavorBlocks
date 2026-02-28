@@ -16,9 +16,7 @@
     <div id="app">
         <!-- 更加高级的开始界面 -->
         <div id="start-screen" class="overlay">
-            <div class="lang-switch">
-                <button id="langBtn" class="premium-btn secondary small">EN / 中</button>
-            </div>
+
             <div class="hero-content">
                 <div class="hero-subtitle">FINE PIXEL DINING</div>
                 <h1 id="main-title" class="hero-title">寻味方块</h1>
@@ -27,6 +25,9 @@
                     <span class="btn-text">OPEN MENU</span>
                     <span class="btn-sub">开启赏味之旅</span>
                 </button>
+                <div class="lang-switch" style="margin-top: 20px; text-align: center;">
+                    <button id="langBtn" class="premium-btn secondary small">EN / 中</button>
+                </div>
                 <div id="producer-credit" class="hero-credits">PRODUCER: 伞伞</div>
             </div>
             <div class="hero-bg-accent"></div>
@@ -142,8 +143,9 @@
                     <canvas id="gameCanvas"></canvas>
                 </div>
 
-                <div class="bottom-controls">
-                    <button id="hintBtn" class="premium-btn secondary">重新打乱</button>
+                <div class="bottom-controls" style="display: flex; gap: 15px; justify-content: center;">
+                    <button id="restartBtn" class="premium-btn secondary">重新打乱</button>
+                    <button id="realHintBtn" class="premium-btn secondary">来点提示</button>
                 </div>
             </main>
         </div>
