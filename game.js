@@ -41,7 +41,7 @@ const I18N = {
         restart: "RESTART",
         congrats: "Incredible! You've tasted every delicacy in our restaurant!",
         back: "CLOSE",
-        producer: "PRODUCER: 伞伞"
+        producer: "PRODUCER: Umbrella"
     },
     zh: {
         title: "寻味方块",
@@ -62,6 +62,154 @@ const I18N = {
     }
 };
 
+// ======================= 音频引擎：使用 Web Audio API 生成自适应氛围背景音与音效 =======================
+class AudioEngine {
+    constructor() {
+        this.ctx = null;
+        this.bgmPlaying = false;
+    }
+
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    }
+
+    playClick() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+    }
+
+    playSnap() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+
+        // 经典的“戳破气泡”音效：音高从低顺滑快速上扬，且非常短暂
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(500, this.ctx.currentTime + 0.05);
+
+        gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+    }
+
+    playBGM() {
+        if (!this.ctx || this.bgmPlaying) return;
+        this.bgmPlaying = true;
+
+        // 轻松、连贯的背景音乐结构：C大调和弦进行 + 五声音阶晶莹高音铃声
+        const chords = [
+            [130.81, 164.81, 196.00], // C
+            [174.61, 220.00, 261.63], // F
+            [196.00, 246.94, 293.66], // G
+            [174.61, 220.00, 261.63], // F
+        ];
+        const pentatonic = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]; // 高音区 C D E G A C
+
+        let chordIdx = 0;
+
+        const playMeasure = () => {
+            if (!this.bgmPlaying) return;
+            const now = this.ctx.currentTime;
+
+            // 1. 播放轻柔连贯的背景和弦 (Pad), 音量极低，增加音乐的连贯感和温暖感
+            chords[chordIdx].forEach(freq => {
+                const padOsc = this.ctx.createOscillator();
+                const padGain = this.ctx.createGain();
+                padOsc.type = 'sine';
+                padOsc.frequency.value = freq;
+
+                padGain.gain.setValueAtTime(0, now);
+                padGain.gain.linearRampToValueAtTime(0.005, now + 1); // 音量极大缩小，只留微弱底色
+                padGain.gain.setTargetAtTime(0, now + 3.5, 1);
+
+                padOsc.connect(padGain);
+                padGain.connect(this.ctx.destination);
+                padOsc.start(now);
+                padOsc.stop(now + 4.5);
+            });
+
+            // 2. 播放一段随机散落但有规律的清脆主旋律 (类似水晶八音盒)
+            const notesCurrentBar = 3 + Math.floor(Math.random() * 3); // 每小节 3~5 个音符
+            for (let i = 0; i < notesCurrentBar; i++) {
+                const melOsc = this.ctx.createOscillator();
+                const melGain = this.ctx.createGain();
+                melOsc.type = 'sine';
+
+                const freq = pentatonic[Math.floor(Math.random() * pentatonic.length)];
+                melOsc.frequency.value = freq;
+
+                // 让音符均匀且随机地散落在 4 秒的小节内
+                const noteTime = now + (i * (8 / notesCurrentBar)) + (Math.random() * 0.2);
+
+                melGain.gain.setValueAtTime(0, noteTime);
+                melGain.gain.linearRampToValueAtTime(0.005, noteTime + 0.05); // 主旋律也压住音量
+                melGain.gain.exponentialRampToValueAtTime(0.001, noteTime + 1.5);
+
+                melOsc.connect(melGain);
+                melGain.connect(this.ctx.destination);
+                melOsc.start(noteTime);
+                melOsc.stop(noteTime + 1.6);
+            }
+
+            chordIdx = (chordIdx + 1) % chords.length;
+            setTimeout(playMeasure, 4000); // 4秒一个和弦交替，连贯成一首曲子
+        };
+
+        playMeasure();
+    }
+
+    playWin() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        // 轻松小巧的出餐成功音效 C E G C (琶音)
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+
+            const time = now + i * 0.08;
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.1, time + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(time);
+            osc.stop(time + 0.5);
+        });
+    }
+}
+const audio = new AudioEngine();
+
+// 给所有的按钮绑定点击音效
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('button') || e.target.closest('.dish-item') || e.target.closest('.flavor-card');
+    if (target) {
+        audio.init();
+        audio.playClick();
+    }
+});
 // 美食关卡数据库
 const FOOD_LEVELS = {
     "asia": [
@@ -76,7 +224,22 @@ const FOOD_LEVELS = {
                 [1, 2, 2, 2, 2, 1],
                 [0, 2, 2, 2, 2, 0]
             ],
-            colors: { 1: "#fdf6e3", 2: "#4a445d", 3: "#d0d0e1" },
+            desktopDim: 12,
+            desktopMask: [
+                [0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0],
+                [0, 0, 0, 3, 1, 1, 4, 1, 3, 0, 0, 0],
+                [0, 0, 3, 1, 1, 1, 1, 1, 1, 3, 0, 0],
+                [0, 3, 1, 4, 1, 1, 1, 4, 1, 1, 3, 0],
+                [3, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 3],
+                [3, 1, 4, 1, 1, 1, 1, 1, 4, 1, 1, 3],
+                [3, 1, 1, 2, 2, 2, 2, 2, 2, 1, 4, 3],
+                [3, 4, 1, 2, 2, 2, 2, 2, 2, 1, 1, 3],
+                [3, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 3],
+                [0, 3, 1, 2, 2, 2, 2, 2, 2, 4, 3, 0],
+                [0, 1, 3, 2, 2, 2, 2, 2, 2, 3, 1, 0],
+                [0, 0, 3, 2, 2, 2, 2, 2, 2, 3, 0, 0]
+            ],
+            colors: { 1: "#fdf6e3", 2: "#4a445d", 3: "#d0d0e1", 4: "#a3a0b5" },
             story: { en: "A simple classic. Pure rice, pure heart.", zh: "一颗简单的饭团，是米饭最纯粹的仪式感。" }
         },
         {
@@ -154,25 +317,34 @@ const FOOD_LEVELS = {
             story: { en: "Colorful ingredients mixing into a rhythmic sizzle.", zh: "五彩斑斓的食材，在石锅里热烈起舞。" }
         },
         {
-            name: { en: "Dim Sum", zh: "广式点心" },
-            dim: 16,
-            mask: Array(16).fill(0).map((_, y) => 1), // Placeholder logic for complexity
-            colors: { 1: "#fdf6e3" },
-            story: { en: "The morning tea culture, thousands of flavors in small steamers.", zh: "一盅两件，叹茶人生。" }
+            name: { en: "Tanghulu", zh: "糖葫芦" },
+            dim: 8,
+            mask: [
+                [0, 0, 4, 0, 0],
+                [0, 2, 1, 1, 0],
+                [0, 3, 3, 3, 0],
+                [0, 2, 1, 1, 0],
+                [0, 3, 3, 3, 0],
+                [0, 2, 1, 1, 0],
+                [0, 3, 3, 3, 0],
+                [0, 0, 4, 0, 0]
+            ],
+            colors: { 1: "#cf3c2c", 2: "#ffb5a6", 3: "#95241b", 4: "#e2ca90" },
+            story: { en: "Crispy sugar coating holding sweet and sour gems.", zh: "冰糖外衣包裹着的酸甜红宝石。" }
         },
         {
-            name: { en: "Tom Yum", zh: "冬阴功汤" },
-            dim: 18,
-            mask: Array(18).fill(0).map((_, y) => 1),
-            colors: { 1: "#ff7043" },
-            story: { en: "Sour, spicy, and the aroma of Southeast Asia.", zh: "酸辣奔放，萨瓦迪卡式的热情。" }
-        },
-        {
-            name: { en: "Indian Thali", zh: "印度塔里" },
-            dim: 20,
-            mask: Array(20).fill(0).map((_, y) => 1),
-            colors: { 1: "#fb8c00" },
-            story: { en: "A round journey of spices and vibrant colors.", zh: "一场关于香料与色彩的圆满旅行。" }
+            name: { en: "Spring Rolls", zh: "春卷" },
+            dim: 6,
+            mask: [
+                [0, 0, 1, 1, 2, 0],
+                [1, 1, 1, 1, 2, 0],
+                [1, 1, 1, 1, 2, 0],
+                [1, 1, 1, 1, 2, 0],
+                [1, 1, 2, 2, 2, 0],
+                [2, 2, 2, 0, 0, 0]
+            ],
+            colors: { 1: "#f3ca76", 2: "#c07a3c" },
+            story: { en: "A golden bite of spring's fresh arrival.", zh: "一口咬碎了金黄的春意。" }
         }
     ],
     "europe": [
@@ -473,7 +645,7 @@ class Piece {
         this.colorId = colorId;
         this.color = currentLevelData.colors[colorId] || "#000000";
 
-        // 初始随机位置：确保完全在画布内
+        // 初始随机位置：确保完全在画布内且不遮挡中间核心拼图区域
         const minPixelX = Math.min(...pixels.map(p => p.x));
         const maxPixelX = Math.max(...pixels.map(p => p.x));
         const minPixelY = Math.min(...pixels.map(p => p.y));
@@ -482,17 +654,57 @@ class Piece {
         const pieceW = (maxPixelX - minPixelX + 1) * PIXEL_SIZE;
         const pieceH = (maxPixelY - minPixelY + 1) * PIXEL_SIZE;
 
-        // 随机尝试放置直到不在目标位置正上方
+        const puzzleW = (currentLevelData._activeDim || currentLevelData.dim) * PIXEL_SIZE;
+        const puzzleH = (currentLevelData._activeDim || currentLevelData.dim) * PIXEL_SIZE;
+
+        // 设置安全散落区域，避免和中间拼图区 (targetX 到 targetX+puzzleW) 重叠
+        // 可以分为左，右，上，下四个大块区域散落
         let attempts = 0;
-        do {
-            this.x = Math.random() * (canvas.width - pieceW) - minPixelX * PIXEL_SIZE;
-            this.y = Math.random() * (canvas.height - pieceH) - minPixelY * PIXEL_SIZE;
+        let placed = false;
+
+        let bestX = 0;
+        let bestY = 0;
+        let minOverlapArea = Infinity;
+
+        while (!placed && attempts < 50) {
+            const rx = Math.random() * (canvas.width - pieceW) - minPixelX * PIXEL_SIZE;
+            const ry = Math.random() * (canvas.height - pieceH) - minPixelY * PIXEL_SIZE;
+
+            // 计算当前碎片的真实横纵范围
+            const myLeft = rx + minPixelX * PIXEL_SIZE;
+            const myRight = rx + maxPixelX * PIXEL_SIZE + PIXEL_SIZE;
+            const myTop = ry + minPixelY * PIXEL_SIZE;
+            const myBottom = ry + maxPixelY * PIXEL_SIZE + PIXEL_SIZE;
+
+            // 目标核心区域（允许极其轻微的一点点边缘擦边，但主体必须避开）
+            const targetLeft = targetX;
+            const targetRight = targetX + puzzleW;
+            const targetTop = targetY;
+            const targetBottom = targetY + puzzleH;
+
+            // 检查重叠（简单的AABB碰撞检测）
+            const overlapX = Math.max(0, Math.min(myRight, targetRight) - Math.max(myLeft, targetLeft));
+            const overlapY = Math.max(0, Math.min(myBottom, targetBottom) - Math.max(myTop, targetTop));
+            const currentOverlapArea = overlapX * overlapY;
+
+            if (currentOverlapArea === 0) {
+                placed = true;
+                this.x = rx;
+                this.y = ry;
+            } else {
+                if (currentOverlapArea < minOverlapArea) {
+                    minOverlapArea = currentOverlapArea;
+                    bestX = rx;
+                    bestY = ry;
+                }
+            }
             attempts++;
-        } while (
-            attempts < 10 &&
-            Math.abs(this.x - this.targetX) < 100 &&
-            Math.abs(this.y - this.targetY) < 100
-        );
+        }
+
+        if (!placed) {
+            this.x = bestX;
+            this.y = bestY;
+        }
 
         this.isLocked = false;
     }
@@ -620,7 +832,8 @@ class Piece {
             const idealY = this.targetY + (targetMin.y - thisMin.y) * PIXEL_SIZE;
 
             const dist = Math.sqrt(Math.pow(this.x - idealX, 2) + Math.pow(this.y - idealY, 2));
-            if (dist < 30) {
+            const snapTolerance = Math.max(40, PIXEL_SIZE * 1.5);
+            if (dist < snapTolerance) {
                 // 如果不是自己的原始位置，则交换像素坐标信息
                 if (targetPiece !== this) {
                     const tempPixels = this.pixels;
@@ -635,6 +848,7 @@ class Piece {
                 this.x = this.targetX;
                 this.y = this.targetY;
                 this.isLocked = true;
+                if (typeof audio !== 'undefined') audio.playSnap();
                 return true;
             }
         }
@@ -741,11 +955,44 @@ function initGameFromData(data, region, idx) {
     currentLevelData = data;
     currentRegion = region;
     currentLevelIdx = idx;
-    const dim = data.dim;
-    const maxPuzzleSize = Math.min(window.innerWidth * 0.8, 450);
-    PIXEL_SIZE = Math.min(50, maxPuzzleSize / dim);
 
-    const mask = data.mask;
+    let scaleFactor = 1;
+    let scaledDim = data.dim;
+    let mask = data.mask;
+
+    // 电脑端（>768px）自适应增加像素精度
+    if (window.innerWidth > 768) {
+        if (data.desktopMask && data.desktopDim) {
+            // 如果此关卡有关卡专属的“电脑版自适应精细贴图”，则直接使用
+            mask = data.desktopMask;
+            scaledDim = data.desktopDim;
+        } else {
+            // 否则使用普通的自动拉伸放大逻辑（极简图放大3倍，中杯放大2倍）
+            if (data.dim <= 8) scaleFactor = 3;
+            else if (data.dim <= 12) scaleFactor = 2;
+
+            scaledDim = data.dim * scaleFactor;
+            mask = [];
+            for (let y = 0; y < data.mask.length; y++) {
+                for (let sy = 0; sy < scaleFactor; sy++) {
+                    const newRow = [];
+                    for (let x = 0; x < data.mask[y].length; x++) {
+                        for (let sx = 0; sx < scaleFactor; sx++) {
+                            newRow.push(data.mask[y][x]);
+                        }
+                    }
+                    mask.push(newRow);
+                }
+            }
+        }
+    }
+
+    currentLevelData._activeDim = scaledDim;
+    currentLevelData._activeMask = mask;
+
+    const maxPuzzleSize = Math.min(window.innerWidth * 0.6, 450);
+    PIXEL_SIZE = Math.min(50, maxPuzzleSize / scaledDim);
+
     const unassignedByColor = {};
 
     for (let y = 0; y < mask.length; y++) {
@@ -771,7 +1018,11 @@ function initGameFromData(data, region, idx) {
             const startIdx = Math.floor(Math.random() * unassigned.length);
             const startPixel = unassigned.splice(startIdx, 1)[0];
             const piecePixels = [startPixel];
-            const clusterLimit = dim <= 5 ? 2 : 4;
+            let clusterLimit = scaledDim <= 8 ? 2 : (scaledDim <= 15 ? 4 : 6);
+            // 降低手机端的割裂感，小屏幕把碎块连大一点
+            if (window.innerWidth <= 768) {
+                clusterLimit += 2;
+            }
             let clusterSize = Math.floor(Math.random() * clusterLimit) + 2;
 
             for (let i = 0; i < clusterSize && unassigned.length > 0; i++) {
@@ -842,10 +1093,76 @@ function showDishes(region) {
     dishScreen.classList.remove('hidden');
 }
 
+function triggerWinEffects() {
+    if (typeof audio !== 'undefined') audio.playWin(); // 出餐小音效
+
+    const previewCanvas = document.getElementById('win-preview-canvas');
+    const pCtx = previewCanvas.getContext('2d');
+
+    // 生成一些礼花粒子
+    const particles = [];
+    const colors = ['#f44336', '#ffeb3b', '#4caf50', '#2196f3', '#9c27b0', '#ff9800'];
+    const pCount = 50;
+
+    for (let i = 0; i < pCount; i++) {
+        // 让粒子从中心往四周爆炸
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6 + 2;
+        particles.push({
+            x: 100, // 画布200x200的中心
+            y: 100,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: Math.random() * 3 + 1.5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: 1
+        });
+    }
+
+    let frame = 0;
+    function animate() {
+        if (frame > 65) {
+            drawWinPreview(); // 在最后一帧彻底清空画布上的残影
+            return;
+        }
+        frame++;
+
+        // 先画静态居中的物品图片
+        drawWinPreview();
+
+        // 然后在上面叠加礼花粒子
+        particles.forEach(p => {
+            if (p.alpha <= 0) return; // 透明度已经是0的粒子没必要计算或绘制
+
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.15; // 稍微有一点重力下沉
+            p.alpha -= 0.02; // 加快淡出速度，确保在动画帧结束前所有粒子都能变成完全透明
+
+            if (p.alpha < 0) p.alpha = 0;
+
+            if (p.alpha > 0) {
+                pCtx.save();
+                pCtx.globalAlpha = p.alpha;
+                pCtx.fillStyle = p.color;
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                pCtx.fill();
+                pCtx.restore();
+            }
+        });
+
+        if (frame <= 60) {
+            requestAnimationFrame(animate);
+        }
+    }
+    animate();
+}
+
 function drawWinPreview() {
     const previewCanvas = document.getElementById('win-preview-canvas');
     const pCtx = previewCanvas.getContext('2d');
-    const mask = currentLevelData.mask;
+    const mask = currentLevelData._activeMask || currentLevelData.mask;
     const rows = mask.length;
     const cols = mask[0].length;
 
@@ -924,7 +1241,7 @@ function render() {
             applyLanguage(); // 更新菜单上的印章
         }
         setTimeout(() => {
-            drawWinPreview();
+            triggerWinEffects();
             document.getElementById('win-title').innerText = currentLevelData.name[currentLang];
             winOverlay.classList.remove('hidden');
         }, 400);
@@ -1040,6 +1357,8 @@ window.addEventListener('touchend', e => {
 });
 
 document.getElementById('playBtn').addEventListener('click', () => {
+    audio.init();
+    audio.playBGM();
     startScreen.classList.add('hidden');
     levelScreen.classList.remove('hidden');
 });
