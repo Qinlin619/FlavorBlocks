@@ -26,6 +26,14 @@ let currentLang = 'zh'; // Default to zh as requested
 let completedLevels = JSON.parse(localStorage.getItem('pixel_restaurant_completed') || '{}');
 let currentHintAlpha = 0;
 let hintAnimationFrame = null;
+let levelStartTime = 0;
+let gameTimerInterval = null;
+
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+}
 
 const I18N = {
     en: {
@@ -45,7 +53,8 @@ const I18N = {
         hint: "HINT",
         congrats: "Incredible! You've tasted every delicacy in our restaurant!",
         back: "CLOSE",
-        producer: "PRODUCER: Umbrella"
+        producer: "PRODUCER: Umbrella",
+        time: "Time: "
     },
     zh: {
         title: "寻味方块",
@@ -64,7 +73,8 @@ const I18N = {
         hint: "来点提示",
         congrats: "太棒了！你已经品鉴完了餐厅的所有美食！",
         back: "返回",
-        producer: "制作人：伞伞"
+        producer: "制作人：伞伞",
+        time: "用时: "
     }
 };
 
@@ -2559,7 +2569,13 @@ function applyLanguage() {
         const key = `${region}_${levelIdx}`;
 
         const nameEl = btn.querySelector('.dish-name');
-        if (nameEl) nameEl.innerText = data.name[currentLang];
+        if (nameEl) {
+            let timeRecordStr = '';
+            if (typeof completedLevels[key] === 'number') {
+                timeRecordStr = `<span class="time-record" style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">🕒 ${formatTime(completedLevels[key])}</span>`;
+            }
+            nameEl.innerHTML = data.name[currentLang] + timeRecordStr;
+        }
 
         if (completedLevels[key]) {
             btn.classList.add('stamped');
@@ -2594,6 +2610,16 @@ function initGameFromData(data, region, idx) {
     currentLevelData = data;
     currentRegion = region;
     currentLevelIdx = idx;
+    levelStartTime = Date.now();
+
+    const timerEl = document.getElementById('game-timer');
+    if (timerEl) timerEl.innerText = '0:00';
+    if (gameTimerInterval) clearInterval(gameTimerInterval);
+    gameTimerInterval = setInterval(() => {
+        if (!isVictoryTriggered && timerEl) {
+            timerEl.innerText = formatTime(Math.round((Date.now() - levelStartTime) / 1000));
+        }
+    }, 1000);
 
     let scaleFactor = 1;
     let scaledDim = data.dim;
@@ -2718,8 +2744,13 @@ function showDishes(region) {
         // 获取星星数量，优先使用 stars 属性
         const stars = levelData.stars || 1;
 
+        let timeRecordStr = '';
+        if (typeof completedLevels[key] === 'number') {
+            timeRecordStr = `<span class="time-record" style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">🕒 ${formatTime(completedLevels[key])}</span>`;
+        }
+
         item.innerHTML = `
-            <span class="dish-name">${levelData.name[currentLang]}</span>
+            <span class="dish-name">${levelData.name[currentLang]}${timeRecordStr}</span>
             ${completedLevels[key] ? '<span class="served-badge">' + I18N[currentLang].served + '</span>' : ''}
             <span class="difficulty-stars">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</span>
         `;
@@ -2896,15 +2927,27 @@ function render() {
 
     if (lockedCount === pieces.length && pieces.length > 0 && !isVictoryTriggered) {
         isVictoryTriggered = true;
+        if (gameTimerInterval) clearInterval(gameTimerInterval);
+        const levelDuration = Math.round((Date.now() - levelStartTime) / 1000);
         const key = `${currentRegion}_${currentLevelIdx}`;
-        if (!completedLevels[key]) {
-            completedLevels[key] = true;
+
+        const prevRecord = completedLevels[key];
+        const newRecord = (typeof prevRecord === 'number') ? Math.min(prevRecord, levelDuration) : levelDuration;
+
+        if (prevRecord !== newRecord) {
+            completedLevels[key] = newRecord;
             localStorage.setItem('pixel_restaurant_completed', JSON.stringify(completedLevels));
             applyLanguage(); // 更新菜单上的印章
         }
+
         setTimeout(() => {
             triggerWinEffects();
             document.getElementById('win-title').innerText = currentLevelData.name[currentLang];
+            const winTimeEl = document.getElementById('win-time');
+            if (winTimeEl) {
+                const prefix = I18N[currentLang].time || "";
+                winTimeEl.innerHTML = `<span style="opacity: 0.8;">🕒 ${prefix}${formatTime(levelDuration)}</span>`;
+            }
             winOverlay.classList.remove('hidden');
         }, 400);
     }
@@ -3182,6 +3225,7 @@ document.getElementById('backToCarousel').addEventListener('click', () => {
 });
 
 document.getElementById('homeBtn').addEventListener('click', () => {
+    if (gameTimerInterval) clearInterval(gameTimerInterval);
     gameUI.classList.add('hidden');
     showDishes(currentRegion);
 });

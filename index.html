@@ -124,10 +124,16 @@
 
         <!-- 游戏界面 -->
         <div id="game-ui" class="hidden">
-            <header>
+            <header style="position: relative;">
                 <div class="header-left">
                     <button id="homeBtn" class="icon-btn">←</button>
                     <h1 id="game-ui-title" class="small-title">寻味方块</h1>
+                </div>
+                <div id="game-timer-container"
+                    style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; color: #666;">
+                    <span style="opacity: 0.8; font-size: 1.1rem; margin-top: -2px;">🕒</span>
+                    <span id="game-timer"
+                        style="font-size: 1.4rem; font-variant-numeric: tabular-nums; font-weight: 400;">0:00</span>
                 </div>
                 <div class="stats">
                     <span id="label-progress" class="label">PROGRESS</span>
@@ -159,6 +165,9 @@
                     <h2 id="win-title">DISH READY!</h2>
                 </div>
                 <p id="win-desc">Everything in its right place.</p>
+                <div id="win-time"
+                    style="margin-top: 10px; font-size: 0.9rem; color: #666; display: flex; justify-content: center; align-items: center;">
+                </div>
                 <div class="win-actions">
                     <button id="toLevelBtn" class="win-icon-btn" title="MENU">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
